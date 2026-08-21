@@ -39,14 +39,37 @@ const nextConfig = {
   async redirects() {
     return [
       /**
-       * Without this, casefileprep.com and www.casefileprep.com both answered
+       * Without these, casefileprep.com and www.casefileprep.com both answered
        * 200 with identical content - duplicate content across two hosts. The
        * canonical tag pointed at www, so www wins here too.
+       *
+       * Split into two rules on purpose. A single `/:path*` rule drops the
+       * trailing slash from the destination, so `/guides/` redirected to
+       * `/guides`, which `trailingSlash: true` then redirected again to
+       * `/guides/` - two hops for every request to the bare domain. `:path+`
+       * requires at least one segment, so the slash can be re-added without
+       * producing a double slash on the root, which the first rule handles.
        */
       {
-        source: '/:path*',
+        source: '/',
         has: [{ type: 'host', value: BARE_HOST }],
-        destination: `https://${CANONICAL_HOST}/:path*`,
+        destination: `https://${CANONICAL_HOST}/`,
+        permanent: true,
+      },
+      {
+        // Files keep their exact path - sitemap.xml, robots.txt, feed.xml,
+        // ads.txt, the manifest and every /_next asset. Appending a slash to
+        // these would 404 them. Matches any path whose final segment has an
+        // extension, so it must come before the directory rule below.
+        source: '/:file(.*\\..*)',
+        has: [{ type: 'host', value: BARE_HOST }],
+        destination: `https://${CANONICAL_HOST}/:file`,
+        permanent: true,
+      },
+      {
+        source: '/:path+',
+        has: [{ type: 'host', value: BARE_HOST }],
+        destination: `https://${CANONICAL_HOST}/:path+/`,
         permanent: true,
       },
     ];
