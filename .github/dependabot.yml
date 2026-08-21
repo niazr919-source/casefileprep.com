@@ -1,0 +1,47 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    # One grouped PR per category instead of a PR per package, so routine
+    # bumps stay reviewable and do not bury real security updates.
+    groups:
+      next:
+        patterns:
+          - 'next'
+          - '@next/*'
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
+      mdx-and-content:
+        patterns:
+          - '*mdx*'
+          - 'remark*'
+          - 'rehype*'
+          - 'gray-matter'
+          - 'github-slugger'
+          - 'reading-time'
+      styling:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
+          - 'postcss'
+          - 'autoprefixer'
+      tooling:
+        patterns:
+          - 'typescript'
+          - '@types/node'
+    commit-message:
+      prefix: 'deps'
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'ci'

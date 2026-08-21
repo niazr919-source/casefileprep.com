@@ -55,6 +55,29 @@ export default function MdxContent({ source }: { source: string }) {
       components={components}
       options={{
         parseFrontmatter: false,
+
+        /**
+         * next-mdx-remote v6 blocks JSX attribute expressions by default
+         * (`blockJS: true`), which is the right default when MDX comes from
+         * untrusted users - it is the mitigation for GHSA-g4xw-jxrg-5f6m.
+         *
+         * This site's MDX is first-party: it lives in `content/posts/` in this
+         * repository, is authored by the editorial team, is compiled at build
+         * time on CI, and is never accepted from readers. It carries exactly
+         * the same trust level as the .tsx files around it. Blocking
+         * expressions here would break the authoring components that guides
+         * depend on, e.g. `<Checklist items={[...]} />`.
+         *
+         * If this site ever accepts MDX from outside the team - guest posts, a
+         * CMS, reader submissions - flip this back to true and convert those
+         * components to children-based or frontmatter-driven APIs first.
+         */
+        blockJS: false,
+
+        // Kept on: still blocks eval, Function, process and other dangerous
+        // globals even though expressions are permitted.
+        blockDangerousJS: true,
+
         mdxOptions: {
           remarkPlugins: [remarkGfm],
           rehypePlugins: [

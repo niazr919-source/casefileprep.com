@@ -192,6 +192,26 @@ sitemap and schema all derive from it.
 
 ---
 
+## Dependency security
+
+`npm audit` reports 3 high advisories that resolve only by moving to Next 16 (a
+major upgrade). They are **not reachable in this deployment**:
+
+| Package | Where it lives | Why it does not apply |
+| --- | --- | --- |
+| `sharp` | `next`'s optional image dependency | Only used by the Image Optimization API, which needs a Node server. This site is a static export with `images.unoptimized: true`, so sharp is never invoked, and no server exists in production. |
+| `postcss` (nested in `next`) | Next's internal CSS pipeline | Build-time only, processing our own first-party CSS on CI. The advisories require attacker-controlled CSS or `sourceMappingURL`. Nothing reaches the browser or Hostinger. |
+
+Production on Hostinger is plain HTML, CSS and JS — no Node runtime, so none of
+these packages exist there at all. Upgrading to Next 16 is still worth doing on
+its own schedule; it just is not a live exposure.
+
+**Fixed already:** `next` 15.5.4 → 15.5.23 (cleared a critical RCE advisory) and
+`next-mdx-remote` 5 → 6 (cleared GHSA-g4xw-jxrg-5f6m). See the note in
+`components/MdxContent.tsx` about `blockJS` and why it is off for first-party MDX.
+
+---
+
 ## Before launch
 
 - [ ] Replace the placeholder editorial team in `content/authors.ts` with real people.
