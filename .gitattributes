@@ -1,0 +1,22 @@
+# Normalise text files to LF in the repository.
+* text=auto eol=lf
+
+# These MUST be LF: they are consumed by Linux (GitHub Actions runners) and by
+# Apache/LiteSpeed on the Hostinger server. CRLF can break directive parsing.
+.htaccess       text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.sh            text eol=lf
+
+# Windows-only launcher needs CRLF to run reliably under cmd.exe.
+*.cmd           text eol=crlf
+
+# Never touch binaries.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
