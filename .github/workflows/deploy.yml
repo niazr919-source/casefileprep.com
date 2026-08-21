@@ -1,0 +1,95 @@
+name: Build and deploy to Hostinger
+
+# Deploys on every push to main, and on demand from the Actions tab.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time. A newer push waits rather than racing an in-flight
+# upload, which would leave public_html half-old and half-new.
+concurrency:
+  group: hostinger-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build static site and upload over FTP
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static export
+        env:
+          # Must match the canonical host enforced in public/.htaccess.
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.casefileprep.com' }}
+          NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'editorial@casefileprep.com' }}
+          # Ad slots stay inert placeholders until these are set in repo settings.
+          NEXT_PUBLIC_ADSENSE_CLIENT: ${{ secrets.NEXT_PUBLIC_ADSENSE_CLIENT }}
+          NEXT_PUBLIC_AD_SLOT_LEADERBOARD: ${{ secrets.NEXT_PUBLIC_AD_SLOT_LEADERBOARD }}
+          NEXT_PUBLIC_AD_SLOT_IN_ARTICLE: ${{ secrets.NEXT_PUBLIC_AD_SLOT_IN_ARTICLE }}
+          NEXT_PUBLIC_AD_SLOT_SIDEBAR: ${{ secrets.NEXT_PUBLIC_AD_SLOT_SIDEBAR }}
+          NEXT_PUBLIC_AD_SLOT_IN_FEED: ${{ secrets.NEXT_PUBLIC_AD_SLOT_IN_FEED }}
+        run: npm run build
+
+      - name: Ensure .htaccess is in the upload
+        # Next copies public/ into out/, but dotfiles are easy to lose across
+        # tooling versions. Copying explicitly makes the deploy deterministic.
+        run: |
+          cp public/.htaccess out/.htaccess
+          echo "--- files at the root of out/ ---"
+          ls -la out/
+
+      - name: Verify the export looks complete
+        # Fails the deploy before upload if the build silently produced nothing,
+        # so a broken build can never wipe a working site.
+        run: |
+          set -e
+          for f in out/index.html out/404.html out/sitemap.xml out/robots.txt out/feed.xml out/ads.txt out/.htaccess; do
+            if [ ! -s "$f" ]; then echo "MISSING OR EMPTY: $f"; exit 1; fi
+          done
+          for d in out/guides out/small-claims-court-document-preparation-checklist \
+                   out/how-to-file-llc-in-texas-guide \
+                   out/car-accident-documentation-insurance-checklist \
+                   out/privacy-policy out/disclaimer out/terms-of-service out/editorial-policy; do
+            if [ ! -s "$d/index.html" ]; then echo "MISSING PAGE: $d/index.html"; exit 1; fi
+          done
+          echo "Export verified: $(find out -name '*.html' | wc -l) HTML files."
+
+      - name: Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./out/
+          server-dir: ${{ vars.FTP_SERVER_DIR || 'public_html/' }}
+          # Uploads only what changed, tracked by a state file on the server.
+          state-name: .ftp-deploy-sync-state.json
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+
+      - name: Summary
+        run: |
+          echo "### Deployed to Hostinger :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Site: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.casefileprep.com' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Pages: $(find out -name '*.html' | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset for the sticky header when jumping to a heading anchor. */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white font-sans text-slate-800 antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-navy-600 ring-offset-2;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-navy-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Article body typography: generous measure, clear hierarchy, and
+     headings that stay clear of the sticky header when anchored. */
+  .article-prose {
+    @apply prose prose-slate max-w-none;
+  }
+
+  .article-prose :where(h2) {
+    @apply mt-12 scroll-mt-28 border-b border-slate-200 pb-2 text-[26px] font-bold sm:text-[30px];
+  }
+
+  .article-prose :where(h3) {
+    @apply mt-9 scroll-mt-28 text-[20px] font-bold sm:text-[22px];
+  }
+
+  .article-prose :where(p) {
+    @apply text-[17px] leading-[1.75];
+  }
+
+  .article-prose :where(ul, ol) {
+    @apply text-[17px];
+  }
+
+  .article-prose :where(li) {
+    @apply my-1.5;
+  }
+
+  .article-prose :where(blockquote) {
+    @apply border-l-4 border-accent-500 bg-slate-50 py-1 not-italic;
+  }
+
+  .article-prose :where(h2 a, h3 a) {
+    @apply font-inherit text-inherit no-underline;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-navy-900 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white;
+  }
+}
+
+@layer utilities {
+  .font-inherit {
+    font-family: inherit;
+  }
+}
+
+/* Ads, navigation and consent UI are never printed - readers print checklists. */
+@media print {
+  header,
+  footer,
+  nav,
+  aside[aria-label='Advertisement'],
+  [role='region'][aria-label='Cookie consent'] {
+    display: none !important;
+  }
+
+  body {
+    font-size: 11pt;
+  }
+
+  .article-prose :where(a)::after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+    color: #555;
+  }
+}

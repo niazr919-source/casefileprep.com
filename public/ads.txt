@@ -1,0 +1,10 @@
+# ads.txt - Authorized Digital Sellers (IAB Tech Lab)
+#
+# REQUIRED BEFORE ADS SERVE AT SCALE.
+# Replace pub-0000000000000000 with your own AdSense publisher ID
+# (found in AdSense > Account > Settings > Account information), then
+# redeploy. Google reads https://casefileprep.com/ads.txt directly.
+#
+# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+#
+# Add one line per additional authorised seller / reseller.

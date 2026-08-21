@@ -1,0 +1,19 @@
+{
+  "name": "CaseFilePrep - Legal Prep Checklists & Filing Guides",
+  "short_name": "CaseFilePrep",
+  "description": "Procedural legal guides, document checklists and filing walkthroughs. Educational information only, not legal advice.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f1e33",
+  "lang": "en",
+  "categories": ["education", "reference", "business"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
