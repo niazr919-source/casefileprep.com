@@ -1,0 +1,48 @@
+name: CI
+
+# Hostinger builds and deploys the app itself from this repository, so CI's job
+# is to catch a broken build BEFORE it reaches the live site - not to deploy.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Type-check and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Build
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.casefileprep.com' }}
+          NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'editorial@casefileprep.com' }}
+          NEXT_PUBLIC_ADSENSE_CLIENT: ${{ secrets.NEXT_PUBLIC_ADSENSE_CLIENT }}
+          NEXT_PUBLIC_AD_SLOT_LEADERBOARD: ${{ secrets.NEXT_PUBLIC_AD_SLOT_LEADERBOARD }}
+          NEXT_PUBLIC_AD_SLOT_IN_ARTICLE: ${{ secrets.NEXT_PUBLIC_AD_SLOT_IN_ARTICLE }}
+          NEXT_PUBLIC_AD_SLOT_SIDEBAR: ${{ secrets.NEXT_PUBLIC_AD_SLOT_SIDEBAR }}
+          NEXT_PUBLIC_AD_SLOT_IN_FEED: ${{ secrets.NEXT_PUBLIC_AD_SLOT_IN_FEED }}
+        run: npm run build
+
+      - name: Check every guide has the fields AdSense and E-E-A-T reviewers look for
+        run: node scripts/check-content.mjs

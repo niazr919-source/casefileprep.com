@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "next dev -p 3011",
     "build": "next build",
-    "preview": "npx --yes serve out -l 3011 --no-clipboard",
-    "lint": "next lint"
+    "start": "next start -p 3011",
+    "lint": "next lint",
+    "check": "node scripts/check-content.mjs"
   },
   "dependencies": {
     "github-slugger": "^2.0.0",

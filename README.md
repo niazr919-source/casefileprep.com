@@ -6,10 +6,10 @@ nameserver records at the time of scaffolding — confirm registrability at a re
 before you buy).
 
 - **Framework:** Next.js 15 (App Router), React 19, TypeScript
-- **Deployment:** static export -> GitHub Actions -> Hostinger (see [DEPLOYMENT.md](DEPLOYMENT.md))
+- **Deployment:** Hostinger builds and runs the Next.js app from GitHub (see [DEPLOYMENT.md](DEPLOYMENT.md))
 - **Styling:** Tailwind CSS 3.4 + `@tailwindcss/typography`, slate/navy corporate palette
 - **Content:** local MDX in `content/posts/` with a typed frontmatter schema
-- **Rendering:** fully static HTML export (`output: 'export'`, `trailingSlash: true`)
+- **Rendering:** all routes prerendered at build time, served by a Next.js Node server (`trailingSlash: true`)
 - **Fonts:** `next/font` (Inter + Source Serif 4), self-hosted, `display: swap`, no CLS
 
 ---
@@ -26,14 +26,17 @@ npm run dev
 
 Then open <http://localhost:3011>.
 
-To preview exactly what gets deployed:
+To run the production build locally:
 
 ```bash
-npm run build && npm run preview
+npm run build && npm run start
 ```
 
-`npm run build` produces a **static export** in `out/` (see Deployment below), so
-there is no `next start` — `npm run preview` serves the exported files instead.
+To run the content quality gate:
+
+```bash
+npm run check
+```
 
 ---
 
@@ -68,10 +71,12 @@ lib/
   schema.ts               JSON-LD generators
   format.ts               Date/URL helpers
 public/
-  .htaccess               Apache/LiteSpeed rules: HTTPS+www, caching, security headers
   ads.txt site.webmanifest
-.github/workflows/
-  deploy.yml              Build + FTPS upload to Hostinger on push to main
+scripts/
+  check-content.mjs       Content quality gate (frontmatter, length, sources, FAQs)
+.github/
+  workflows/ci.yml        Type-check, build and content gate on every push
+  dependabot.yml          Grouped weekly dependency updates
 ```
 
 ---
@@ -184,8 +189,7 @@ interaction (`strategy="afterInteractive"`).
 - `sitemap.xml` and `robots.txt` generated at build; `Mediapartners-Google` and
   `AdsBot-Google` explicitly allowed.
 - RSS 2.0 at `/feed.xml`.
-- Security and caching headers in `public/.htaccess` (static export has no Node
-  server, so `headers()` in `next.config.mjs` does not apply).
+- Security headers and the bare-domain -> www redirect in `next.config.mjs`.
 
 Set `NEXT_PUBLIC_SITE_URL` to the production origin before deploying — canonicals,
 sitemap and schema all derive from it.
@@ -199,12 +203,12 @@ major upgrade). They are **not reachable in this deployment**:
 
 | Package | Where it lives | Why it does not apply |
 | --- | --- | --- |
-| `sharp` | `next`'s optional image dependency | Only used by the Image Optimization API, which needs a Node server. This site is a static export with `images.unoptimized: true`, so sharp is never invoked, and no server exists in production. |
+| `sharp` | `next`'s optional image dependency | Only reachable through the Image Optimization API. The site uses no `next/image` components and sets `images.unoptimized: true`, which keeps that endpoint out of play. Revisit before introducing real images. |
 | `postcss` (nested in `next`) | Next's internal CSS pipeline | Build-time only, processing our own first-party CSS on CI. The advisories require attacker-controlled CSS or `sourceMappingURL`. Nothing reaches the browser or Hostinger. |
 
-Production on Hostinger is plain HTML, CSS and JS — no Node runtime, so none of
-these packages exist there at all. Upgrading to Next 16 is still worth doing on
-its own schedule; it just is not a live exposure.
+Hostinger runs the app on Node, so these packages are present in production;
+the mitigation is that neither has a reachable code path in this site as built.
+Upgrading to Next 16 would clear both properly and is worth scheduling.
 
 **Fixed already:** `next` 15.5.4 → 15.5.23 (cleared a critical RCE advisory) and
 `next-mdx-remote` 5 → 6 (cleared GHSA-g4xw-jxrg-5f6m). See the note in

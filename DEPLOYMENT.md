@@ -1,198 +1,122 @@
-# Deploying CaseFilePrep to Hostinger
+# Deploying CaseFilePrep
 
-Target setup: **Hostinger shared/Premium/Business hosting** (LiteSpeed, no Node.js
-runtime) with **GitHub Actions** building the site and uploading it over FTPS.
+**Live:** <https://www.casefileprep.com>
+
+## How deployment actually works
+
+The repository is connected to Hostinger through hPanel. Hostinger pulls from
+`main`, runs the build, and serves the result as a **Next.js Node application**.
 
 ```
 git push origin main
         │
         ▼
-GitHub Actions  ──▶  npm ci  ──▶  npm run build  ──▶  /out  (static HTML)
+Hostinger pulls, runs npm ci && npm run build
         │
         ▼
-   FTPS upload  ──▶  Hostinger public_html/  ──▶  https://www.casefileprep.com
+Next.js server (node)  ──▶  Hostinger CDN  ──▶  https://www.casefileprep.com
 ```
 
-Nothing is built on Hostinger. It only ever stores plain HTML, CSS, JS and
-images, which is exactly what shared hosting is good at.
+Confirmed empirically: the live site returns `x-nextjs-cache` / `x-nextjs-prerender`
+headers, serves RSC payloads (`content-type: text/x-component`), and issues Next's
+own 308 trailing-slash redirects. It is not static files behind Apache.
 
----
+**There is no FTP deployment and no `.htaccess`.** An earlier setup targeted
+Apache-style shared hosting; it was removed once the real runtime was identified.
+Security headers and the canonical-host redirect now live in `next.config.mjs`,
+where they work in server mode.
 
-## Part 1 — Push the code to GitHub
+GitHub Actions runs `.github/workflows/ci.yml`, which type-checks, builds and runs
+the content gate on every push. It does **not** deploy — it exists to catch a
+broken build before Hostinger picks it up.
 
-The repository is already initialised and committed locally.
-
-1. Create an **empty** repository on GitHub (no README, no .gitignore, no licence)
-   at <https://github.com/new>. Name it `casefileprep`.
-
-2. Connect and push:
+## Publishing a new guide
 
 ```bash
-cd "C:\Users\zaman\Desktop\Law FIrm" && git remote add origin https://github.com/YOUR_USERNAME/casefileprep.git && git branch -M main && git push -u origin main
+cd "C:\Users\zaman\Desktop\Law FIrm" && npm run check && git add . && git commit -m "Add guide: <title>" && git push
 ```
 
-If git asks who you are, set your identity once:
+Hostinger rebuilds automatically. Run `npm run check` first — it enforces the
+frontmatter, word count, sourcing and review rules described in the README.
 
-```bash
-git config --global user.name "Your Name" && git config --global user.email "you@example.com"
-```
+## Environment variables
 
----
+Set these in hPanel under the application's environment settings, not in the repo.
 
-## Part 2 — Get your FTP details from Hostinger
-
-In **hPanel** → your website → **Files** → **FTP Accounts**.
-
-Note down three values:
-
-| Value | Looks like | Notes |
+| Variable | Value | Needed |
 | --- | --- | --- |
-| FTP hostname | `ftp.casefileprep.com` or `82.180.x.x` | Use exactly what hPanel shows |
-| FTP username | `u123456789.casefileprep` | Full string including the `u` prefix |
-| FTP password | — | Use **Change FTP password** to set a fresh one you can copy |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.casefileprep.com` | Now — canonicals, sitemap and schema derive from it |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Your real editorial address | Now |
+| `NEXT_PUBLIC_ADSENSE_CLIENT` | `ca-pub-…` | After AdSense approval |
+| `NEXT_PUBLIC_AD_SLOT_LEADERBOARD` | Ad unit ID | After approval |
+| `NEXT_PUBLIC_AD_SLOT_IN_ARTICLE` | Ad unit ID | After approval |
+| `NEXT_PUBLIC_AD_SLOT_SIDEBAR` | Ad unit ID | After approval |
+| `NEXT_PUBLIC_AD_SLOT_IN_FEED` | Ad unit ID | After approval |
 
-Confirm the upload directory too. For the primary domain on a Hostinger account
-it is `public_html/`. If casefileprep.com is an **addon domain**, it will be
-something like `domains/casefileprep.com/public_html/` — check under
-**Files → File Manager** and note the exact path.
+Until the AdSense variables are set, ad slots render as inert reserved-height
+placeholders and nothing is requested from Google.
 
----
+## Canonical host
 
-## Part 3 — Add the secrets to GitHub
+`www.casefileprep.com` is canonical. Two places must agree:
 
-In the GitHub repo: **Settings → Secrets and variables → Actions**.
+1. `NEXT_PUBLIC_SITE_URL` — drives canonical tags, sitemap, JSON-LD and RSS.
+2. The `redirects()` block in `next.config.mjs` — sends the bare domain to `www`.
 
-### Secrets tab → New repository secret
+To switch to the bare domain, change both. Changing one produces canonical tags
+pointing at a URL that redirects, which wastes crawl budget and splits signals.
 
-| Name | Value |
-| --- | --- |
-| `FTP_SERVER` | The FTP hostname from Part 2 |
-| `FTP_USERNAME` | The FTP username |
-| `FTP_PASSWORD` | The FTP password |
-
-Add these later, once AdSense approves you — the site deploys fine without them
-and ad slots simply render as reserved placeholders:
-
-| Name | Value |
-| --- | --- |
-| `NEXT_PUBLIC_ADSENSE_CLIENT` | `ca-pub-XXXXXXXXXXXXXXXX` |
-| `NEXT_PUBLIC_AD_SLOT_LEADERBOARD` | Ad unit ID |
-| `NEXT_PUBLIC_AD_SLOT_IN_ARTICLE` | Ad unit ID |
-| `NEXT_PUBLIC_AD_SLOT_SIDEBAR` | Ad unit ID |
-| `NEXT_PUBLIC_AD_SLOT_IN_FEED` | Ad unit ID |
-
-### Variables tab → New repository variable
-
-| Name | Value |
-| --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | `https://www.casefileprep.com` |
-| `FTP_SERVER_DIR` | `public_html/` — only needed if your path differs |
-
-> **The site URL and the canonical host in `public/.htaccess` must match.**
-> Both are set to `www` right now. If you switch to the bare domain, change both.
-
----
-
-## Part 4 — Point the domain at Hostinger
-
-In hPanel the domain is probably already connected. Verify:
-
-- **Domains → DNS / Nameservers** — nameservers should be Hostinger's
-  (`ns1.dns-parking.com` / `ns2.dns-parking.com`), or your A record should point
-  at the Hostinger server IP shown in hPanel.
-- **Websites → SSL** — install the free Let's Encrypt certificate and turn on
-  **Force HTTPS**. The `.htaccess` also forces HTTPS, so this is belt and braces.
-- Make sure both `casefileprep.com` and `www.casefileprep.com` resolve. The
-  `.htaccess` redirects the bare domain to `www` in a single hop.
-
-DNS changes can take a few hours to propagate.
-
----
-
-## Part 5 — Deploy
-
-Push anything to `main`, or trigger it manually:
-
-**GitHub → Actions → "Build and deploy to Hostinger" → Run workflow.**
-
-The run takes roughly two minutes. It will:
-
-1. install dependencies with `npm ci`
-2. build the static export into `out/`
-3. copy `public/.htaccess` into `out/`
-4. **verify** the export contains every expected page — the deploy aborts before
-   upload if anything is missing, so a broken build can never wipe a working site
-5. upload only changed files over FTPS
-
-The first deploy uploads everything (~2–3 MB). Later deploys upload only what
-changed, tracked by `.ftp-deploy-sync-state.json` on the server.
-
----
-
-## Part 6 — After the first successful deploy
-
-- [ ] Visit `https://www.casefileprep.com` and click through a guide.
-- [ ] Check `https://www.casefileprep.com/sitemap.xml` and `/robots.txt` load.
-- [ ] Confirm `http://casefileprep.com` redirects to `https://www.casefileprep.com`.
-- [ ] Add the property in **Google Search Console** and submit the sitemap.
-- [ ] Paste your publisher ID into `public/ads.txt`, uncomment the line, push.
-- [ ] Apply to AdSense — but publish more guides first; three articles is a
-      scaffold, not an application.
-
----
-
-## Publishing a new article after this is set up
+## Verifying a deploy
 
 ```bash
-cd "C:\Users\zaman\Desktop\Law FIrm" && git add . && git commit -m "Add new guide" && git push
+curl -sI https://www.casefileprep.com/ | grep -Ei 'x-content-type|referrer-policy|permissions-policy'
 ```
 
-That is the whole deployment process from then on. Two minutes later it is live.
+Three checks that catch most problems:
 
----
+- Security headers present on the homepage (proves the new `next.config.mjs` is live).
+- `https://casefileprep.com/` returns 308 to `https://www.casefileprep.com/`.
+- `https://www.casefileprep.com/sitemap.xml` lists every guide.
 
-## Troubleshooting
-
-**Workflow fails at the FTP step with a login error.**
-The username must be the complete string from hPanel including the `u123456789.`
-prefix. Re-set the FTP password in hPanel and re-copy it into the secret — the
-password shown at creation is often not the one currently active.
-
-**Deploy succeeds but the site shows Hostinger's default page.**
-`FTP_SERVER_DIR` is pointing at the wrong folder. Check the real path in hPanel
-File Manager and set the `FTP_SERVER_DIR` variable to match, with a trailing slash.
-
-**Pages load but have no styling.**
-The `_next` folder did not upload. Check the Actions log for FTP errors, then
-re-run the workflow. To force a full re-upload, delete
-`.ftp-deploy-sync-state.json` from `public_html` via File Manager.
-
-**A page 404s but works locally.**
-`.htaccess` is missing from `public_html`. It is a hidden file — enable "Show
-hidden files" in File Manager to see it. Re-run the workflow to restore it.
-
-**Changes are live but the browser shows the old version.**
-HTML is served with `must-revalidate`, so a hard refresh (Ctrl+F5) should be
-enough. If Hostinger's LiteSpeed cache is enabled, purge it in hPanel.
-
-**A redirect loop.**
-Hostinger's "Force HTTPS" toggle and the `.htaccess` HTTPS rule can occasionally
-collide. Turn off the hPanel toggle and let `.htaccess` handle it alone.
-
----
-
-## Local commands
+## Local development
 
 ```bash
 npm run dev
 ```
 
-Dev server with hot reload on <http://localhost:3011>.
+Hot reload on <http://localhost:3011>.
 
 ```bash
-npm run build && npm run preview
+npm run build && npm run start
 ```
 
-Builds the real static export and serves `out/` on <http://localhost:3011> —
-this is byte-for-byte what Hostinger will serve. `next start` no longer applies,
-because the site is a static export with no server.
+Production build served locally on the same port — the closest match to what
+Hostinger runs. Note that `npm run dev` overwrites `.next`, so rebuild before
+`npm run start`.
+
+```bash
+npm run check
+```
+
+Content gate: frontmatter completeness, minimum length, FAQ and source counts,
+author/reviewer validity, duplicate slugs, and advice-phrasing detection.
+
+## Troubleshooting
+
+**Changes pushed but the site is unchanged.**
+Check the deployment log in hPanel — the build may have failed. Compare against
+the GitHub Actions CI run for the same commit: if CI passed and Hostinger did
+not, the problem is environment-specific (usually a missing env var or a Node
+version difference).
+
+**Security headers missing on the live site.**
+The deployed build predates the `next.config.mjs` change, or Hostinger's CDN is
+serving a cached response. Redeploy and re-check with a cache-busting query string.
+
+**Bare domain does not redirect.**
+Confirm both hostnames are attached to the application in hPanel. The redirect is
+matched on the `Host` header, so the bare domain must reach the app to be
+redirected.
+
+**Old content still served after a deploy.**
+Hostinger's CDN sits in front of the app. Purge the cache in hPanel.

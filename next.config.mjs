@@ -1,31 +1,81 @@
+const CANONICAL_HOST = 'www.casefileprep.com';
+const BARE_HOST = 'casefileprep.com';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   /**
-   * Static HTML export for Hostinger shared hosting (LiteSpeed/Apache, no
-   * Node.js runtime). Every route in this site is already prerendered, so
-   * nothing is lost by exporting.
+   * Runs as a Next.js Node application on Hostinger, which builds and serves
+   * the app directly from the connected GitHub repository.
    *
-   * Consequences of `output: 'export'`, all handled elsewhere in the repo:
-   *  - ISR/revalidate is unavailable: content refreshes when you push, not on a timer.
-   *  - next/image optimisation is unavailable: `unoptimized` below.
-   *  - `headers()` is unavailable: security and caching headers live in public/.htaccess.
-   *  - Every dynamic route must set `dynamicParams = false` (they all do).
+   * This was briefly configured as `output: 'export'` for Apache-style shared
+   * hosting. The live server proves otherwise - it returns `x-nextjs-*` headers
+   * and serves RSC payloads - so the config matches the real runtime again.
+   * Server mode also restores `headers()` and `redirects()`, which a static
+   * export cannot provide.
    */
-  output: 'export',
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
 
   /**
-   * Emits `guides/index.html` rather than `guides.html`, so Apache/LiteSpeed
-   * serves clean URLs (/guides/) through DirectoryIndex with no rewrite rules.
+   * Every published URL already ends in a slash (canonical tags, sitemap,
+   * JSON-LD and RSS all agree). Changing this would 301 the entire site, so it
+   * stays put.
    */
   trailingSlash: true,
 
-  reactStrictMode: true,
-  poweredByHeader: false,
-
   images: {
-    // Required for static export - there is no Node server to optimise on.
+    /**
+     * The site uses no next/image components. Disabling the optimizer keeps
+     * the /_next/image endpoint out of play, which removes the only route
+     * that would exercise `sharp` and its inherited libvips advisories.
+     * Turn this back on when real images are introduced - and upgrade Next
+     * first if the sharp advisories are still open at that point.
+     */
     unoptimized: true,
     formats: ['image/avif', 'image/webp'],
+  },
+
+  async redirects() {
+    return [
+      /**
+       * Without this, casefileprep.com and www.casefileprep.com both answered
+       * 200 with identical content - duplicate content across two hosts. The
+       * canonical tag pointed at www, so www wins here too.
+       */
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: BARE_HOST }],
+        destination: `https://${CANONICAL_HOST}/:path*`,
+        permanent: true,
+      },
+    ];
+  },
+
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+        ],
+      },
+      {
+        // Google re-reads ads.txt regularly; keep it fresh rather than cached hard.
+        source: '/ads.txt',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=3600' }],
+      },
+    ];
   },
 };
 
