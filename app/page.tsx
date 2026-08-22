@@ -9,14 +9,14 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Legal Document Prep Checklists & Court Filing Guides',
   description:
-    'Step-by-step document preparation checklists for small claims court, LLC formation and insurance claims. Written by paralegals and compliance researchers, reviewed for procedural accuracy. Educational information, not legal advice.',
+    'Step-by-step document preparation checklists for small claims court, LLC formation and insurance claims. Researched from court rules, clerk instructions and agency publications, with every source cited. Educational information, not legal advice.',
   alternates: { canonical: '/' },
 };
 
 const TRUST_POINTS = [
   {
-    title: 'Written by people who filed the paperwork',
-    body: 'Our contributors are certified paralegals, former state-filings analysts and former insurance adjusters describing procedures they have personally handled hundreds of times.',
+    title: 'Open about what we are',
+    body: 'We are researchers and writers, not lawyers, and we say so on every guide. No qualification we do not hold is claimed anywhere on this site. Where a question needs a licensed professional, the guide says that plainly instead of guessing.',
   },
   {
     title: 'Checked against primary sources',
@@ -24,7 +24,7 @@ const TRUST_POINTS = [
   },
   {
     title: 'Reviewed and re-reviewed on a schedule',
-    body: 'Each guide carries a named reviewer and a last-reviewed date. Guides are re-checked at least every six months, and immediately when a rule or fee changes.',
+    body: 'Each guide carries the date it was first published and the date it was last checked against its sources. Guides are re-checked at least every six months, and sooner when a rule or fee changes.',
   },
   {
     title: 'Process information, never legal advice',
@@ -54,9 +54,9 @@ export default function HomePage() {
             <p className="mt-5 text-[18px] leading-relaxed text-slate-600">
               {siteConfig.name} publishes plain-English procedural guides for people assembling
               their own documents - small claims evidence packets, LLC formation filings, insurance
-              claim files. Every guide is a checklist you can work through in order, written by
-              researchers who have handled the process themselves and reviewed for accuracy before
-              publication.
+              claim files. Every guide is a checklist you can work through in order, built by
+              reading the official rules and instructions and citing every source, so you can check
+              our work.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link

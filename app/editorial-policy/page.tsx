@@ -40,16 +40,23 @@ export default function EditorialPolicyPage() {
 
       <h2>2. Who writes our guides</h2>
       <p>
-        Guides are written by named contributors with direct, verifiable working experience in the
-        process they describe - certified paralegals, former state-filings compliance analysts,
-        former insurance adjusters and professional legal editors. Every contributor has a public
-        biography page listing their credentials, their relevant experience and the guides they have
-        worked on. We do not publish anonymous or pseudonymous procedural content.
+        Guides are researched and written by the {siteConfig.name} editorial team and published
+        under that single name. We are not attorneys, paralegals or licensed professionals in law,
+        insurance or accountancy, and this site claims no qualification it does not hold. You will
+        not find a professional credential asserted anywhere on it.
       </p>
       <p>
-        Contributors write about processes they have personally handled. Where a guide covers a
-        jurisdiction or step outside a writer&rsquo;s direct experience, that is stated in the guide
-        and the section is sourced more heavily.
+        We think stating that plainly is more useful than the alternative. A great deal of legal
+        content online carries impressive-looking bylines that cannot be verified, and a reader has
+        no way to tell a real expert from a decorative one. What can be verified is our sourcing:
+        every procedural statement is traceable to an official publication, and the link is printed
+        at the foot of the guide. Judge the work by whether the sources say what we say they say.
+      </p>
+      <p>
+        The trade-off is real and we would rather name it. We can tell you accurately what the
+        official instructions say and what order things happen in. We cannot bring professional
+        judgement to bear on your circumstances, and we do not pretend to. Every guide identifies
+        the point at which a licensed attorney is needed.
       </p>
 
       <h2>3. Sourcing standards</h2>
@@ -67,11 +74,11 @@ export default function EditorialPolicyPage() {
         publication or review. Sources are listed at the foot of each guide.
       </p>
 
-      <h2>4. Review before publication</h2>
+      <h2>4. Checks before publication</h2>
       <p>
-        Nothing publishes without a second person. Every guide is reviewed by the{' '}
-        {siteConfig.name} Legal Research Team, whose reviewer is named on the article. The reviewer
-        checks:
+        Before a guide publishes it is checked against a fixed list. We do not claim an independent
+        second reviewer, because a single editorial team cannot honestly claim one. What we do
+        claim is that this checklist is worked through every time:
       </p>
       <ul>
         <li>that each procedural statement matches its cited primary source;</li>
@@ -112,11 +119,11 @@ export default function EditorialPolicyPage() {
 
       <h2>8. Use of AI tools</h2>
       <p>
-        We use software, including AI tools, for research assistance, outlining, and copy-editing.
-        We do not publish machine-generated procedural content unverified. Every factual and
-        procedural statement in a published guide is checked by a named human against a primary
-        source, and a named human reviewer signs it off. Responsibility for accuracy sits with those
-        people, not with a tool.
+        We use software, including AI tools, for research assistance, drafting and copy-editing.
+        We do not publish machine-generated procedural content unverified: every factual and
+        procedural statement is checked by a person against the primary source it came from, and
+        those sources are published with the guide so you can repeat the check yourself.
+        Responsibility for accuracy sits with the publisher, not with a tool.
       </p>
 
       <h2>9. Accessibility and plain language</h2>

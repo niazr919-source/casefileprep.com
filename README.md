@@ -62,7 +62,7 @@ components/
   mdx/                    Callout, Checklist, KeyTakeaways, FaqSection
 content/
   posts/*.mdx             The guides
-  authors.ts              Writer + reviewer records
+  authors.ts              The single editorial publishing identity
   categories.ts           Topic taxonomy
 lib/
   site.ts                 Site + AdSense config
@@ -94,8 +94,7 @@ slug: 'url-slug'
 description: 'Meta description, 150-160 chars'
 category: 'Small Claims & Civil Disputes'
 categorySlug: 'small-claims-civil-disputes'  # must exist in content/categories.ts
-author: 'dana-whitfield'                     # must exist in content/authors.ts
-reviewer: 'legal-research-team'
+author: 'casefileprep-editorial'             # must exist in content/authors.ts
 publishedAt: '2026-03-11'
 updatedAt: '2026-08-04'
 jurisdiction: 'General US procedure (verify local rules)'
@@ -173,19 +172,23 @@ interaction (`strategy="afterInteractive"`).
   `analytics_storage`; a genuine one-click reject sits beside accept; the choice
   is stored locally and replayed on every load. Rendered on idle so it never
   competes with LCP, and it is a bar rather than an interstitial.
-- **E-E-A-T:** named author with stated first-hand experience and credentials,
-  named reviewer ("Reviewed by Legal Research Team"), published and last-reviewed
-  dates, review cycle, primary-source citation list, per-author profile pages, and
-  a full editorial policy describing sourcing, review, corrections and independence.
+- **E-E-A-T, honestly:** the site publishes under one editorial identity and
+  claims no professional credential it does not hold. Trust is built on what can
+  actually be verified - a primary-source citation list on every guide linking to
+  the issuing authority, explicit publication and last-checked dates, a stated
+  jurisdiction, an open statement of what the publisher is *not*, and an
+  editorial policy describing sourcing, checks, corrections and independence.
+  Invented bylines with fabricated qualifications were removed deliberately; do
+  not reintroduce them.
 
 ---
 
 ## SEO
 
 - Per-page canonical URLs, Open Graph and Twitter metadata.
-- JSON-LD: `Organization`, `WebSite`, `Article` (with `author`, `reviewedBy`,
-  `datePublished`, `dateModified`, `wordCount`, `citation`), `FAQPage`,
-  `BreadcrumbList`, `CollectionPage`, `Person`.
+- JSON-LD: `Organization`, `WebSite`, `Article` (with `author` as an
+  Organization, `datePublished`, `dateModified`, `wordCount`, `citation`),
+  `FAQPage`, `BreadcrumbList`, `CollectionPage`.
 - `sitemap.xml` and `robots.txt` generated at build; `Mediapartners-Google` and
   `AdsBot-Google` explicitly allowed.
 - RSS 2.0 at `/feed.xml`.

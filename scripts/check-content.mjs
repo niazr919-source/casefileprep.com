@@ -27,7 +27,6 @@ const REQUIRED_FIELDS = [
   'category',
   'categorySlug',
   'author',
-  'reviewer',
   'publishedAt',
   'updatedAt',
   'jurisdiction',
@@ -105,11 +104,10 @@ for (const file of files) {
   if (data.author && !knownAuthors.includes(data.author)) {
     errors.push(`${where}: unknown author "${data.author}"`);
   }
-  if (data.reviewer && !knownAuthors.includes(data.reviewer)) {
-    errors.push(`${where}: unknown reviewer "${data.reviewer}"`);
-  }
-  if (data.author && data.author === data.reviewer) {
-    errors.push(`${where}: author and reviewer are the same person - review must be independent`);
+  if (data.reviewer) {
+    errors.push(
+      `${where}: the "reviewer" field is retired - the site publishes under a single editorial identity`,
+    );
   }
   if (data.categorySlug && !knownCategories.includes(data.categorySlug)) {
     errors.push(`${where}: unknown categorySlug "${data.categorySlug}"`);

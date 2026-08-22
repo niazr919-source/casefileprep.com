@@ -39,6 +39,21 @@ const nextConfig = {
   async redirects() {
     return [
       /**
+       * Retired author URLs. These four were live and listed in the sitemap
+       * while the site briefly published under invented bylines. Those
+       * identities were removed; the URLs are redirected rather than left to
+       * 404 so anything that already crawled or linked them lands somewhere
+       * real.
+       */
+      ...['dana-whitfield', 'marcus-oyelaran', 'priya-raman', 'legal-research-team'].map(
+        (slug) => ({
+          source: `/authors/${slug}/`,
+          destination: '/authors/casefileprep-editorial/',
+          permanent: true,
+        }),
+      ),
+
+      /**
        * Without these, casefileprep.com and www.casefileprep.com both answered
        * 200 with identical content - duplicate content across two hosts. The
        * canonical tag pointed at www, so www wins here too.

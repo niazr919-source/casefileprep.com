@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
-  authors: [{ name: `${siteConfig.name} Legal Research Team`, url: `${siteConfig.url}/about-us` }],
+  authors: [{ name: `${siteConfig.name} Editorial Team`, url: `${siteConfig.url}/about-us` }],
   creator: siteConfig.legalName,
   publisher: siteConfig.legalName,
   category: 'Legal information',

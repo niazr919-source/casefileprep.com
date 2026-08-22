@@ -18,7 +18,6 @@ export type PostFrontmatter = {
   category: string;
   categorySlug: string;
   author: string;
-  reviewer: string;
   publishedAt: string;
   updatedAt: string;
   jurisdiction: string;
@@ -39,7 +38,6 @@ export type Post = {
   readingMinutes: number;
   wordCount: number;
   authorProfile: Author;
-  reviewerProfile: Author;
   categoryProfile?: Category;
 };
 
@@ -74,7 +72,6 @@ function parseFile(fileName: string): Post {
     category: requireString(data.category, 'category', fileName),
     categorySlug: requireString(data.categorySlug, 'categorySlug', fileName),
     author: requireString(data.author, 'author', fileName),
-    reviewer: requireString(data.reviewer, 'reviewer', fileName),
     publishedAt: requireString(data.publishedAt, 'publishedAt', fileName),
     updatedAt: requireString(data.updatedAt || data.publishedAt, 'updatedAt', fileName),
     jurisdiction: requireString(data.jurisdiction, 'jurisdiction', fileName),
@@ -96,7 +93,6 @@ function parseFile(fileName: string): Post {
     readingMinutes: Math.max(1, Math.round(stats.minutes)),
     wordCount: stats.words,
     authorProfile: getAuthor(frontmatter.author),
-    reviewerProfile: getAuthor(frontmatter.reviewer),
     categoryProfile: getCategory(frontmatter.categorySlug),
   };
 }
@@ -133,9 +129,7 @@ export function getPostsByCategory(categorySlug: string): Post[] {
 }
 
 export function getPostsByAuthor(authorSlug: string): Post[] {
-  return getAllPosts().filter(
-    (p) => p.frontmatter.author === authorSlug || p.frontmatter.reviewer === authorSlug,
-  );
+  return getAllPosts().filter((p) => p.frontmatter.author === authorSlug);
 }
 
 /** Same category first, then newest, excluding the current post. */

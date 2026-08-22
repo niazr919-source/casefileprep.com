@@ -4,44 +4,40 @@ import { formatDate } from '@/lib/format';
 
 type Props = {
   author: Author;
-  reviewer: Author;
   publishedAt: string;
   updatedAt: string;
 };
 
-function Avatar({ initials, tone }: { initials: string; tone: 'navy' | 'slate' }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-base font-bold text-white ${
-        tone === 'navy' ? 'bg-navy-800' : 'bg-slate-600'
-      }`}
-    >
-      {initials}
-    </span>
-  );
-}
-
 /**
- * E-E-A-T block: names the writer, their first-hand experience, the named
- * reviewer, and the publication/review dates. Rendered at the foot of every
- * guide and mirrored in Article JSON-LD (author + reviewedBy).
+ * Provenance block shown at the foot of every guide.
+ *
+ * This used to present a named writer and a separate named reviewer. Both were
+ * invented, so both are gone. What replaces them is the part that is actually
+ * true and checkable: who publishes this, what qualifications are and are not
+ * held, how the guide was researched, when it was last checked, and where the
+ * sources are. Transparency about limits is a stronger trust signal than a
+ * credential nobody can verify.
  */
-export default function AuthorBio({ author, reviewer, publishedAt, updatedAt }: Props) {
+export default function AuthorBio({ author, publishedAt, updatedAt }: Props) {
   return (
     <section
-      aria-labelledby="about-the-author"
+      aria-labelledby="about-this-guide"
       className="not-prose mt-12 rounded-xl border border-slate-200 bg-white p-5 sm:p-6"
     >
       <h2
-        id="about-the-author"
+        id="about-this-guide"
         className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500"
       >
-        About the author
+        About this guide
       </h2>
 
       <div className="mt-4 flex flex-col gap-4 sm:flex-row">
-        <Avatar initials={author.initials} tone="navy" />
+        <span
+          aria-hidden="true"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-navy-800 text-base font-bold text-white"
+        >
+          {author.initials}
+        </span>
         <div className="min-w-0">
           <p className="font-serif text-lg font-bold text-navy-900">
             <Link href={`/authors/${author.slug}`} className="hover:underline">
@@ -49,38 +45,19 @@ export default function AuthorBio({ author, reviewer, publishedAt, updatedAt }: 
             </Link>
           </p>
           <p className="text-sm font-semibold text-accent-600">{author.role}</p>
-          <p className="mt-0.5 text-xs text-slate-500">{author.credentials}</p>
           <p className="mt-3 text-sm leading-relaxed text-slate-700">{author.bio}</p>
+
+          <p className="mt-3 rounded-md bg-amber-50/70 p-3 text-[13px] leading-relaxed text-slate-700">
+            <span className="font-semibold text-navy-900">What we are not: </span>
+            {author.credentials} Use this guide to understand the process, then confirm the details
+            with the court, agency or insurer handling your matter, and take advice from a licensed
+            attorney about your own situation.
+          </p>
+
           <p className="mt-3 rounded-md bg-slate-50 p-3 text-[13px] leading-relaxed text-slate-600">
-            <span className="font-semibold text-navy-900">Relevant experience: </span>
+            <span className="font-semibold text-navy-900">How this guide was researched: </span>
             {author.experience}
           </p>
-          <ul className="mt-3 flex flex-wrap gap-1.5">
-            {author.expertise.map((item) => (
-              <li
-                key={item}
-                className="rounded-full bg-navy-50 px-2.5 py-1 text-[11px] font-semibold text-navy-800"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="mt-6 flex flex-col gap-4 border-t border-slate-200 pt-5 sm:flex-row">
-        <Avatar initials={reviewer.initials} tone="slate" />
-        <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
-            Reviewed by Legal Research Team
-          </p>
-          <p className="mt-1 font-serif text-base font-bold text-navy-900">
-            <Link href={`/authors/${reviewer.slug}`} className="hover:underline">
-              {reviewer.name}
-            </Link>
-          </p>
-          <p className="text-sm text-slate-600">{reviewer.role}</p>
-          <p className="mt-2 text-sm leading-relaxed text-slate-700">{reviewer.bio}</p>
         </div>
       </div>
 
@@ -90,25 +67,25 @@ export default function AuthorBio({ author, reviewer, publishedAt, updatedAt }: 
           <dd className="text-slate-800">{formatDate(publishedAt)}</dd>
         </div>
         <div>
-          <dt className="font-semibold text-slate-500">Last reviewed</dt>
+          <dt className="font-semibold text-slate-500">Last checked</dt>
           <dd className="text-slate-800">{formatDate(updatedAt)}</dd>
         </div>
         <div>
-          <dt className="font-semibold text-slate-500">Review cycle</dt>
-          <dd className="text-slate-800">
-            Every 6 months, or sooner if the underlying rules change
-          </dd>
+          <dt className="font-semibold text-slate-500">Sources</dt>
+          <dd className="text-slate-800">Listed above, linked to the issuing authority</dd>
         </div>
       </dl>
 
       <p className="mt-4 text-xs leading-relaxed text-slate-500">
-        Our contributors are legal-procedure researchers, paralegals and former industry
-        professionals. They are not acting as your attorney and nothing on this page is legal advice
-        about your situation. Read our{' '}
+        Found something out of date or wrong?{' '}
+        <Link href="/contact" className="font-semibold underline underline-offset-2">
+          Tell us
+        </Link>{' '}
+        - corrections are the most useful message we receive. Our{' '}
         <Link href="/editorial-policy" className="font-semibold underline underline-offset-2">
           editorial policy
-        </Link>
-        .
+        </Link>{' '}
+        sets out how we research, what we refuse to publish, and how we handle corrections.
       </p>
     </section>
   );

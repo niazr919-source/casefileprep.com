@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import JsonLd from '@/components/JsonLd';
 import { authors, authorMap } from '@/content/authors';
 import { getPostsByAuthor } from '@/lib/posts';
-import { breadcrumbSchema, personSchema } from '@/lib/schema';
+import { authorSchema, breadcrumbSchema } from '@/lib/schema';
 
 export const dynamicParams = false;
 
@@ -42,7 +42,7 @@ export default async function AuthorPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd id="author" data={[personSchema(author), breadcrumbSchema(trail)]} />
+      <JsonLd id="author" data={[authorSchema(author), breadcrumbSchema(trail)]} />
 
       <div className="mx-auto max-w-shell px-4 pb-16 pt-6">
         <Breadcrumbs trail={trail} />
@@ -59,10 +59,14 @@ export default async function AuthorPage({ params }: Props) {
               {author.name}
             </h1>
             <p className="mt-1 text-base font-semibold text-accent-600">{author.role}</p>
-            <p className="mt-1 text-sm text-slate-500">{author.credentials}</p>
+
             <p className="mt-4 text-[17px] leading-relaxed text-slate-700">{author.bio}</p>
-            <p className="mt-4 rounded-lg bg-slate-50 p-4 text-[15px] leading-relaxed text-slate-600">
-              <span className="font-semibold text-navy-900">Experience: </span>
+            <p className="mt-4 rounded-lg bg-amber-50/70 p-4 text-[15px] leading-relaxed text-slate-700">
+              <span className="font-semibold text-navy-900">What we are not: </span>
+              {author.credentials}
+            </p>
+            <p className="mt-3 rounded-lg bg-slate-50 p-4 text-[15px] leading-relaxed text-slate-600">
+              <span className="font-semibold text-navy-900">How the guides are researched: </span>
               {author.experience}
             </p>
             <ul className="mt-4 flex flex-wrap gap-2">
@@ -88,8 +92,8 @@ export default async function AuthorPage({ params }: Props) {
               </p>
             ) : null}
             <p className="mt-4 text-xs leading-relaxed text-slate-500">
-              {author.name} is not a practising attorney and does not provide legal advice or
-              representation through this site. See our{' '}
+              {author.name} does not provide legal advice or representation through this site,
+              and nothing published here is a substitute for a licensed attorney. See our{' '}
               <Link href="/disclaimer" className="underline underline-offset-2">
                 disclaimer
               </Link>
@@ -101,7 +105,7 @@ export default async function AuthorPage({ params }: Props) {
         {posts.length ? (
           <section aria-labelledby="author-posts" className="mt-12">
             <h2 id="author-posts" className="font-serif text-2xl font-bold text-navy-900">
-              Guides written or reviewed by {author.name}
+              Guides published by {author.name}
             </h2>
             <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (

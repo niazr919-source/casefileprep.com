@@ -45,19 +45,22 @@ export function websiteSchema(): Json {
   };
 }
 
-export function personSchema(author: Author): Json {
+/**
+ * The byline is an editorial team, not an individual, so this emits
+ * Organization rather than Person. `hasCredential` is deliberately absent:
+ * the credentials field now records that no professional qualification is
+ * held, and asserting that as a credential would be misleading markup.
+ */
+export function authorSchema(author: Author): Json {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': `${siteConfig.url}/authors/${author.slug}#person`,
+    '@type': 'Organization',
+    '@id': `${siteConfig.url}/authors/${author.slug}#editorial`,
     name: author.name,
     url: absoluteUrl(siteConfig.url, `/authors/${author.slug}`),
-    jobTitle: author.role,
     description: author.bio,
     knowsAbout: author.expertise,
-    hasCredential: author.credentials,
-    worksFor: { '@id': ORG_ID },
-    ...(author.linkedin ? { sameAs: [author.linkedin] } : {}),
+    parentOrganization: { '@id': ORG_ID },
   };
 }
 
@@ -105,22 +108,13 @@ export function articleSchema(post: Post): Json {
     wordCount: post.wordCount,
     datePublished: isoDate(post.frontmatter.publishedAt),
     dateModified: isoDate(post.frontmatter.updatedAt),
+    // Organization rather than Person: the site publishes under a single
+    // editorial identity and does not assert individual authorship.
     author: {
-      '@type': 'Person',
+      '@type': 'Organization',
       name: post.authorProfile.name,
       url: absoluteUrl(siteConfig.url, `/authors/${post.authorProfile.slug}`),
-      jobTitle: post.authorProfile.role,
       knowsAbout: post.authorProfile.expertise,
-    },
-    reviewedBy: {
-      '@type': 'Person',
-      name: post.reviewerProfile.name,
-      url: absoluteUrl(siteConfig.url, `/authors/${post.reviewerProfile.slug}`),
-      jobTitle: post.reviewerProfile.role,
-    },
-    editor: {
-      '@type': 'Person',
-      name: post.reviewerProfile.name,
     },
     publisher: { '@id': ORG_ID },
     isAccessibleForFree: true,

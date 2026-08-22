@@ -66,12 +66,24 @@ export default function AboutPage() {
 
             <h2>How we work</h2>
             <p>
-              Every guide is written by a named contributor with direct experience of the process,
-              checked line by line against primary sources - statutes, court rules, clerk
-              instructions, agency publications - and reviewed by a second named person before it
-              publishes. Each guide carries a last-reviewed date and a list of the sources checked.
-              We re-review on a six-month cycle and immediately when a rule changes. The full
-              standard is written down in our <Link href="/editorial-policy">editorial policy</Link>.
+              Every guide is built by reading the controlling primary sources - statutes, court
+              rules, clerk instructions, agency publications and official forms - and reducing them
+              to a sequence a reader can follow. Every source consulted is listed at the foot of the
+              guide, linked to the authority that published it, so any statement here can be checked
+              against the original. Each guide carries the date it was published and the date it was
+              last checked, and we re-check on a six-month cycle and sooner when a rule changes. The
+              full standard is written down in our{' '}
+              <Link href="/editorial-policy">editorial policy</Link>.
+            </p>
+
+            <h2>Who writes this</h2>
+            <p>
+              One editorial team, publishing under one name. We are not lawyers, paralegals or
+              licensed professionals, and this site claims no qualification it does not hold. That
+              is a real limit and we would rather state it than dress it up: our value is careful
+              research and plain explanation, not professional judgement about your circumstances.
+              For that you need a licensed attorney, and our guides say so at the point where it
+              matters rather than burying it in a footer.
             </p>
 
             <h2>How the site is funded</h2>
@@ -134,11 +146,11 @@ export default function AboutPage() {
 
         <section aria-labelledby="team" className="mt-14">
           <h2 id="team" className="font-serif text-2xl font-bold text-navy-900 sm:text-3xl">
-            Editorial team
+            Who publishes this
           </h2>
           <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-slate-600">
-            Every guide names its writer and its reviewer. None of our contributors is acting as
-            your attorney.
+            Every guide is published under a single editorial identity. Nobody here is acting as
+            your attorney, and no professional credential is claimed.
           </p>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             {authors.map((author) => (

@@ -99,7 +99,7 @@ npm run check
 ```
 
 Content gate: frontmatter completeness, minimum length, FAQ and source counts,
-author/reviewer validity, duplicate slugs, and advice-phrasing detection.
+author validity, duplicate slugs, and advice-phrasing detection.
 
 ## Troubleshooting
 

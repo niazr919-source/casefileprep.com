@@ -5,7 +5,7 @@ export const siteConfig = {
   url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.casefileprep.com').replace(/\/$/, ''),
   tagline: 'Procedural legal prep, checklists and filing guides',
   description:
-    'CaseFilePrep publishes plain-English procedural guides, document checklists and filing walkthroughs for people preparing their own paperwork - small claims, LLC formation, insurance claims and more. Educational information only, never legal advice.',
+    'CaseFilePrep publishes plain-English procedural guides, document checklists and filing walkthroughs for people preparing their own paperwork - small claims, LLC formation, insurance claims and more. Researched from primary sources and fully cited. Educational information only, never legal advice.',
   locale: 'en_US',
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'editorial@casefileprep.com',
   founded: '2024',

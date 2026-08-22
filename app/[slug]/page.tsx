@@ -116,20 +116,11 @@ export default async function GuidePage({ params }: Props) {
               >
                 {post.authorProfile.name}
               </Link>
-              , {post.authorProfile.role}
             </span>
             <span aria-hidden="true" className="text-slate-300">
               |
             </span>
-            <span>
-              Reviewed by{' '}
-              <Link
-                href={`/authors/${post.reviewerProfile.slug}`}
-                className="font-semibold text-navy-800 hover:underline"
-              >
-                Legal Research Team
-              </Link>
-            </span>
+            <span>Researched from the sources listed at the foot of this guide</span>
             <span aria-hidden="true" className="text-slate-300">
               |
             </span>
@@ -167,7 +158,6 @@ export default async function GuidePage({ params }: Props) {
 
             <AuthorBio
               author={post.authorProfile}
-              reviewer={post.reviewerProfile}
               publishedAt={frontmatter.publishedAt}
               updatedAt={frontmatter.updatedAt}
             />
