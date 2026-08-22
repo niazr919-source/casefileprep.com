@@ -92,7 +92,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <>
             <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="" />
             <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="" />
+
+            {/* Site-ownership verification via the meta-tag method. */}
             <meta name="google-adsense-account" content={adsense.client} />
+
+            {/*
+              Deliberately a plain <script>, not next/script.
+              `strategy="afterInteractive"` injects the tag during hydration, so
+              it is not reliably present in the server-rendered HTML that the
+              AdSense verification crawler reads. A plain async script in <head>
+              is in the raw markup on every page, which is what both the
+              verification step and the "code snippet" method require.
+
+              Consent is handled separately: Consent Mode v2 defaults below set
+              ad_storage, ad_user_data and ad_personalization to denied until
+              the reader chooses, which is Google's documented pattern for
+              loading the tag before consent is known.
+            */}
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense.client}`}
+              crossOrigin="anonymous"
+            />
           </>
         ) : null}
       </head>
@@ -118,15 +139,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <JsonLd id="global" data={[organizationSchema(), websiteSchema()]} />
 
-        {adsense.client ? (
-          <Script
-            id="adsbygoogle-init"
-            async
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense.client}`}
-          />
-        ) : null}
       </body>
     </html>
   );

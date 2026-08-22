@@ -33,8 +33,23 @@ export const siteConfig = {
   ],
 } as const;
 
+/**
+ * AdSense publisher ID.
+ *
+ * Hard-coded on purpose. A publisher ID is not a secret - it is visible in the
+ * page source of every AdSense site on the web, and Google requires it to be.
+ * Keeping it here rather than in an env var removes an entire class of failure:
+ * NEXT_PUBLIC_* values are inlined at build time, so a value set in a hosting
+ * panel after the last build silently does nothing, and some platforms do not
+ * expose panel env vars to the build step at all. That is exactly why the
+ * verification crawler found no code on the live site.
+ *
+ * The env var still wins if set, so a second property can override it.
+ */
+const ADSENSE_PUBLISHER_ID = 'ca-pub-2716080376550479';
+
 export const adsense = {
-  client: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || '',
+  client: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || ADSENSE_PUBLISHER_ID,
   slots: {
     leaderboard: process.env.NEXT_PUBLIC_AD_SLOT_LEADERBOARD || '',
     inArticle: process.env.NEXT_PUBLIC_AD_SLOT_IN_ARTICLE || '',

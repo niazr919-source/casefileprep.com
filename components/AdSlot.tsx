@@ -84,9 +84,19 @@ export default function AdSlot({ variant, className = '', note }: AdSlotProps) {
       window.adsbygoogle.push({});
       pushed.current = true;
     } catch {
-      /* AdSense script blocked or not yet loaded - placeholder stays visible. */
+      /* AdSense script blocked or not yet loaded - nothing renders. */
     }
   }, [live]);
+
+  /**
+   * Between approval and creating ad units there is a window where the
+   * publisher ID exists but slot IDs do not. Rendering a grey "Ad slot
+   * reserved" box in that window makes a finished site look like scaffolding,
+   * and "under construction" appearance is a documented AdSense rejection
+   * reason. So the placeholder is a development aid only - in production an
+   * unconfigured slot renders nothing at all.
+   */
+  if (!live && process.env.NODE_ENV !== 'development') return null;
 
   return (
     <aside
