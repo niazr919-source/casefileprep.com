@@ -72,17 +72,28 @@ const nextConfig = {
         permanent: true,
       },
       {
-        // Files keep their exact path - sitemap.xml, robots.txt, feed.xml,
-        // ads.txt, the manifest and every /_next asset. Appending a slash to
-        // these would 404 them. Matches any path whose final segment has an
-        // extension, so it must come before the directory rule below.
-        source: '/:file(.*\\..*)',
+        /**
+         * Files keep their exact path - feed.xml, the manifest, every /_next
+         * asset. Appending a slash would 404 them. Must precede the directory
+         * rule below.
+         *
+         * robots.txt, sitemap.xml and ads.txt are deliberately excluded so
+         * they are served directly on BOTH hosts with a 200. Crawler tooling
+         * treats a redirected robots.txt or sitemap as unreachable - Search
+         * Console reported the sitemap as missing for exactly this reason,
+         * because a domain property fetches the bare host. These three are
+         * discovery files, not indexable pages, so serving them on both hosts
+         * costs nothing in canonicalisation.
+         */
+        source: '/:file((?!robots\\.txt|sitemap\\.xml|ads\\.txt).*\\..*)',
         has: [{ type: 'host', value: BARE_HOST }],
         destination: `https://${CANONICAL_HOST}/:file`,
         permanent: true,
       },
       {
-        source: '/:path+',
+        // Directories only - every page URL ends in a slash under
+        // `trailingSlash: true`, so this cannot catch the bare files above.
+        source: '/:path+/',
         has: [{ type: 'host', value: BARE_HOST }],
         destination: `https://${CANONICAL_HOST}/:path+/`,
         permanent: true,
