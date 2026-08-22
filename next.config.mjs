@@ -93,10 +93,42 @@ const nextConfig = {
           },
         ],
       },
+      /**
+       * Cache-Control for HTML, overriding Next's default.
+       *
+       * Next stamps fully prerendered pages with `s-maxage=31536000`, which
+       * assumes a CDN that gets purged on every deploy - true on Vercel, not
+       * true on Hostinger. The result was a CDN HIT with an age of 26 hours
+       * serving a build from before the AdSense tag existed, to real visitors
+       * and to Google's crawler alike. Deploys were invisible.
+       *
+       * 60 seconds of shared cache keeps the CDN useful; the revalidation
+       * means a deploy is picked up within a minute instead of a year.
+       * `_next/` is excluded so hashed build assets keep their immutable
+       * long-lived caching.
+       */
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/:path((?!_next/).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300, must-revalidate',
+          },
+        ],
+      },
       {
         // Google re-reads ads.txt regularly; keep it fresh rather than cached hard.
         source: '/ads.txt',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=3600' }],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=300' }],
       },
     ];
   },
