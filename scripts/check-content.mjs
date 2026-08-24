@@ -68,11 +68,33 @@ const seenSlugs = new Map();
 const seenTitles = new Map();
 const categoryCounts = {};
 
+/**
+ * Counts words a reader actually sees.
+ *
+ * The naive version stripped every JSX block wholesale, which threw away all
+ * the text inside <Checklist items={[...]}> and <KeyTakeaways points={[...]}>.
+ * That is reader-facing prose - often several hundred words of it - so
+ * discarding it under-counted the longest, most useful guides. Quoted strings
+ * inside component props are recovered before the tags are stripped.
+ */
 function wordCount(body) {
-  return body
-    .replace(/```[\s\S]*?```/g, ' ')
+  const componentText = [];
+  const withoutFences = body.replace(/```[\s\S]*?```/g, ' ');
+
+  for (const block of withoutFences.match(/<[A-Z][\s\S]*?\/>/g) || []) {
+    for (const quoted of block.match(/"[^"]*"/g) || []) {
+      const inner = quoted.slice(1, -1);
+      // Skip prop values that are identifiers or class names, not prose.
+      if (/\s/.test(inner)) componentText.push(inner);
+    }
+  }
+
+  const prose = withoutFences
     .replace(/<[^>]+>/g, ' ')
-    .replace(/[#*_>|`-]/g, ' ')
+    .replace(/[#*_>|`-]/g, ' ');
+
+  return [prose, ...componentText]
+    .join(' ')
     .split(/\s+/)
     .filter(Boolean).length;
 }
@@ -191,7 +213,7 @@ for (const file of files) {
     }
   }
 
-  if (!/consult|licensed attorney|licensed lawyer|speak to a lawyer/i.test(content)) {
+  if (!/consult|licensed[\w\s]{0,24}(attorney|lawyer)|speak to a lawyer/i.test(content)) {
     warnings.push(`${where}: no pointer to consulting a licensed attorney`);
   }
 }
