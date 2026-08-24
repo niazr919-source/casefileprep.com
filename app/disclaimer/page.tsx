@@ -6,7 +6,7 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Legal Disclaimer',
   description:
-    'CaseFilePrep publishes general educational information about legal procedure. It is not legal advice, no attorney-client relationship is formed, and jurisdictional rules vary.',
+    'CaseFilePrep publishes general educational information about legal procedure. It is not legal advice and no attorney-client relationship is formed.',
   alternates: { canonical: '/disclaimer' },
 };
 
@@ -54,8 +54,9 @@ export default function DisclaimerPage() {
         {siteConfig.name} is a publisher. We are not a law firm, a legal document preparation
         service, a registered agent, an insurance broker, a claims adjuster, or a lawyer referral
         service. We do not review documents, prepare filings for readers, appear in court, or
-        represent anyone. Our contributors include paralegals, compliance analysts and former
-        industry professionals writing in an educational capacity - not as your representative.
+        represent anyone. We hold no professional qualification in law, insurance or accountancy
+        and claim none; we research official sources and explain them, which is not the same thing
+        as professional judgement about your circumstances.
       </p>
 
       <h2>4. Jurisdiction matters</h2>

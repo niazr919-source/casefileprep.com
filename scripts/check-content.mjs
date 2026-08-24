@@ -19,6 +19,11 @@ const MIN_WORDS = 1200;
 const MIN_FAQS = 3;
 const MIN_SOURCES = 2;
 const MIN_POSTS = 10;
+const MAX_TITLE = 60;
+const SITE_SUFFIX_LEN = ' | CaseFilePrep'.length;
+const MIN_META = 110;
+const MAX_META = 160;
+const MIN_INTERNAL_LINKS = 1;
 
 const REQUIRED_FIELDS = [
   'title',
@@ -138,10 +143,39 @@ for (const file of files) {
     }
   }
 
-  if (data.description) {
-    const len = String(data.description).length;
-    if (len < 70) warnings.push(`${where}: meta description is only ${len} chars`);
-    if (len > 300) warnings.push(`${where}: meta description is ${len} chars, quite long`);
+  // --- SEO: what actually shows in a search result -------------------------
+  // Google truncates the title around 60 characters including the site-name
+  // suffix, and the description around 155. Anything longer is written for
+  // nobody: the reader never sees it.
+  const seoTitle = data.headline || data.title || '';
+  const titleLen = String(seoTitle).length + SITE_SUFFIX_LEN;
+  if (titleLen > MAX_TITLE) {
+    warnings.push(
+      `${where}: search title is ${titleLen} chars incl. " | CaseFilePrep" (max ${MAX_TITLE}) - add or shorten "headline"`,
+    );
+  }
+
+  const meta = data.metaDescription;
+  if (!meta) {
+    warnings.push(`${where}: no metaDescription - the long "description" will be truncated in results`);
+  } else {
+    const len = String(meta).length;
+    if (len > MAX_META) errors.push(`${where}: metaDescription is ${len} chars, over the ${MAX_META} limit`);
+    if (len < MIN_META) warnings.push(`${where}: metaDescription is only ${len} chars, room for more`);
+  }
+
+  if (data.description && String(data.description).length < 70) {
+    warnings.push(`${where}: on-page description is very short`);
+  }
+
+  // --- SEO: internal linking ----------------------------------------------
+  // Contextual in-body links are how a topical cluster signals its own
+  // structure. Related-post widgets do not substitute for them.
+  const internalLinks = (content.match(/\]\(\/[a-z0-9-]+\//g) || []).length;
+  if (internalLinks < MIN_INTERNAL_LINKS) {
+    warnings.push(
+      `${where}: ${internalLinks} contextual internal link(s), aim for at least ${MIN_INTERNAL_LINKS}`,
+    );
   }
 
   if (data.publishedAt && data.updatedAt) {

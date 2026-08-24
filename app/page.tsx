@@ -9,7 +9,7 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Legal Document Prep Checklists & Court Filing Guides',
   description:
-    'Step-by-step document preparation checklists for small claims court, LLC formation and insurance claims. Researched from court rules, clerk instructions and agency publications, with every source cited. Educational information, not legal advice.',
+    'Step-by-step document checklists for small claims court, LLC formation and insurance claims. Sourced from court rules and agency guidance. Not legal advice.',
   alternates: { canonical: '/' },
 };
 

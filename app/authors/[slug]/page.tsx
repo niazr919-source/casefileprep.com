@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const author = authorMap[slug];
   if (!author) return {};
   return {
-    title: `${author.name} - ${author.role}`,
+    title: author.name,
     description: author.bio.slice(0, 155),
     alternates: { canonical: `/authors/${author.slug}` },
   };

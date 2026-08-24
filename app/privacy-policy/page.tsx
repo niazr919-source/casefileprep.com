@@ -6,7 +6,7 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description:
-    'How CaseFilePrep collects, uses and protects information, how Google and other advertising partners use cookies on this site, and how to exercise your GDPR and CCPA rights.',
+    'What CaseFilePrep collects, how Google and other ad partners use cookies here, and how to exercise your GDPR and CCPA rights.',
   alternates: { canonical: '/privacy-policy' },
   robots: { index: true, follow: true },
 };

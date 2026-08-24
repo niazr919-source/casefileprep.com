@@ -32,9 +32,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {};
 
   const { frontmatter } = post;
+  // Google truncates the title around 60 characters and the description around
+  // 155. The on-page H1 and dek stay long and descriptive; these are the
+  // shorter forms written for the search result itself.
+  const seoTitle = frontmatter.headline || frontmatter.title;
+  const seoDescription = frontmatter.metaDescription || frontmatter.description;
   return {
-    title: frontmatter.title,
-    description: frontmatter.description,
+    title: seoTitle,
+    description: seoDescription,
     keywords: frontmatter.keywords,
     alternates: { canonical: post.url },
     authors: [
@@ -43,8 +48,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: 'article',
       url: post.url,
-      title: frontmatter.title,
-      description: frontmatter.description,
+      title: seoTitle,
+      description: seoDescription,
       publishedTime: frontmatter.publishedAt,
       modifiedTime: frontmatter.updatedAt,
       authors: [post.authorProfile.name],
@@ -53,8 +58,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: frontmatter.title,
-      description: frontmatter.description,
+      title: seoTitle,
+      description: seoDescription,
     },
   };
 }

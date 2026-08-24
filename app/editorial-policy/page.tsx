@@ -6,7 +6,7 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Editorial Policy',
   description:
-    'How CaseFilePrep researches, writes, reviews, dates and corrects its legal procedure guides, and the line we hold between procedural information and legal advice.',
+    'How CaseFilePrep researches, writes, dates and corrects its guides, and the line we hold between procedural information and legal advice.',
   alternates: { canonical: '/editorial-policy' },
 };
 

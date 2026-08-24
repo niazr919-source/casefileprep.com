@@ -9,7 +9,7 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'About Us',
   description:
-    'Who publishes CaseFilePrep, the editorial team behind the guides, how the site is funded, and the boundary we keep between procedural information and legal advice.',
+    'Who publishes CaseFilePrep, how the guides are researched and funded, and the line we keep between procedural information and legal advice.',
   alternates: { canonical: '/about-us' },
 };
 

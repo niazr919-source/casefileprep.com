@@ -9,9 +9,9 @@ import { categories } from '@/content/categories';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'All Legal Prep Guides & Document Checklists',
+  title: 'All Guides & Document Checklists',
   description:
-    'Every CaseFilePrep guide in one place: small claims evidence checklists, LLC formation filing steps and post-accident insurance documentation. Educational procedural information only.',
+    'Every CaseFilePrep guide in one place: small claims evidence checklists, LLC formation steps and insurance claim documentation. Not legal advice.',
   alternates: { canonical: '/guides' },
 };
 

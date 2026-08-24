@@ -21,7 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = getCategory(slug);
   if (!category) return {};
   return {
-    title: `${category.name} Guides & Checklists`,
+    // Category names are already long; the suffix pushes the combined title
+    // past the ~60 characters Google shows.
+    title: category.name,
     description: category.description,
     alternates: { canonical: `/category/${category.slug}` },
     openGraph: {

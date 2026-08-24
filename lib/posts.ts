@@ -14,6 +14,8 @@ export type PostFrontmatter = {
   title: string;
   headline?: string;
   description: string;
+  /** Short meta description (<=160 chars). Falls back to `description`. */
+  metaDescription?: string;
   slug: string;
   category: string;
   categorySlug: string;
@@ -68,6 +70,8 @@ function parseFile(fileName: string): Post {
     title: requireString(data.title, 'title', fileName),
     headline: typeof data.headline === 'string' ? data.headline : undefined,
     description: requireString(data.description, 'description', fileName),
+    metaDescription:
+      typeof data.metaDescription === 'string' ? data.metaDescription.trim() : undefined,
     slug,
     category: requireString(data.category, 'category', fileName),
     categorySlug: requireString(data.categorySlug, 'categorySlug', fileName),
