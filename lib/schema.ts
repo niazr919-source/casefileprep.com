@@ -42,6 +42,15 @@ export function websiteSchema(): Json {
     description: siteConfig.description,
     inLanguage: 'en',
     publisher: { '@id': ORG_ID },
+    // Enables the sitelinks search box and tells Google the site is searchable.
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteConfig.url}/search/?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 

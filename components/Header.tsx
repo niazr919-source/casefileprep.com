@@ -57,8 +57,26 @@ export default function Header() {
         </nav>
 
         <Link
+          href="/search"
+          aria-label="Search guides"
+          className="ml-auto hidden h-10 w-10 items-center justify-center rounded-md border border-slate-300 text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900 lg:ml-0 lg:inline-flex"
+        >
+          <svg
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <circle cx="9" cy="9" r="6" />
+            <path d="M13.5 13.5 18 18" strokeLinecap="round" />
+          </svg>
+        </Link>
+
+        <Link
           href="/guides"
-          className="ml-auto hidden rounded-md bg-navy-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800 lg:ml-0 lg:inline-block"
+          className="hidden rounded-md bg-navy-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800 lg:inline-block"
         >
           Browse checklists
         </Link>
@@ -94,6 +112,14 @@ export default function Header() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/search"
+                className="block border-b border-slate-100 py-3 text-sm font-semibold text-slate-700"
+              >
+                Search guides
+              </Link>
+            </li>
             <li>
               <Link href="/guides" className="block py-3 text-sm font-semibold text-navy-900">
                 Browse all checklists

@@ -88,6 +88,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <head>
+        {/*
+          Declared here rather than via metadata.alternates.types because Next
+          replaces `alternates` wholesale rather than merging it. Every page
+          that sets its own canonical was silently dropping the feed link.
+        */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${siteConfig.name} - latest guides`}
+          href="/feed.xml"
+        />
+
         {adsense.client ? (
           <>
             <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="" />
