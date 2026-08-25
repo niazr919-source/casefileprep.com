@@ -1,0 +1,156 @@
+---
+title: 'How to Read an Explanation of Benefits (EOB)'
+headline: 'How to Read an Explanation of Benefits'
+metaDescription: 'An EOB is not a bill. What billed, allowed, plan paid and patient responsibility each mean, and how to reconcile the columns against a provider bill.'
+slug: 'how-to-read-explanation-of-benefits'
+description: 'An explanation of benefits is not a bill, and the difference between the billed amount and what anyone actually pays is usually large. What each column means, what the remark codes are telling you, and how to reconcile an EOB against the provider bill.'
+category: 'Claims & Incident Documentation'
+categorySlug: 'claims-incident-documentation'
+author: 'casefileprep-editorial'
+publishedAt: '2026-08-25'
+updatedAt: '2026-08-25'
+jurisdiction: 'United States'
+keywords:
+  - how to read an explanation of benefits
+  - EOB vs bill
+  - allowed amount vs billed amount
+  - patient responsibility EOB
+  - EOB remark codes
+tags:
+  - medical billing
+  - insurance claims
+  - documentation
+sources:
+  - label: 'CMS - Medicare coverage and billing information'
+    url: 'https://www.cms.gov/medicare/coverage'
+  - label: 'HHS - Health insurance appeals and consumer rights'
+    url: 'https://www.hhs.gov/healthcare/about-the-aca/health-insurance-appeals/index.html'
+  - label: 'Consumer Financial Protection Bureau - Medical debt resources'
+    url: 'https://www.consumerfinance.gov/consumer-tools/medical-debt/'
+faqs:
+  - question: 'Is an explanation of benefits a bill?'
+    answer: 'No, and most carry a statement saying so. An EOB is your insurer telling you how it processed a claim: what the provider billed, what the plan allowed, what it paid, and what portion remains your responsibility. The actual bill comes separately from the provider, and the two should be reconciled against each other rather than either being taken alone.'
+  - question: 'Why is the billed amount so much higher than what was paid?'
+    answer: 'The billed amount is the provider list price. Where a provider is in network, they have agreed a lower rate with the insurer, and the difference between the two is a contractual adjustment the provider writes off rather than something anyone owes. Treating the billed figure as your cost overstates it substantially.'
+  - question: 'What does patient responsibility mean?'
+    answer: 'It is the portion of the allowed amount the plan says falls to you, typically made up of deductible, copay and coinsurance. It is the figure to compare against what the provider bills you. Where the provider bill exceeds it, that difference is worth querying before paying.'
+  - question: 'What are remark codes on an EOB?'
+    answer: 'Short codes explaining why a line was processed the way it was - applied to deductible, service not covered, duplicate claim, more information needed, out-of-network. The key is usually printed on the back of the statement or in the insurer portal. Reading the code for any denied or reduced line tells you whether the issue is administrative or a coverage decision.'
+  - question: 'What should I do if the EOB and the provider bill disagree?'
+    answer: 'Query it in writing before paying. Ask the provider billing department to explain the difference between their charge and the patient responsibility on the EOB, and reference the claim number and date of service. A billing error, a claim not yet submitted, or a service processed as out of network are the usual explanations, and each has a different fix.'
+---
+
+Explanations of benefits arrive looking like bills, are frequently printed like bills, and cause people to pay amounts they do not owe. Most carry a line saying "this is not a bill" somewhere on the page, usually in smaller type than the number that alarmed you.
+
+What it actually is: your insurer's record of how it processed a claim. Read alongside the provider's itemised bill, the two documents give you an accurate picture of what care cost and what portion is genuinely yours. Read alone, either one misleads.
+
+<KeyTakeaways points={[
+  "An EOB is a processing record, not a demand for payment",
+  "Billed is the list price; allowed is the negotiated rate",
+  "The contractual adjustment is written off, not owed by anyone",
+  "Patient responsibility is the figure to compare against the provider bill",
+  "Remark codes explain every reduced or denied line - look them up",
+  "Reconcile the EOB and the bill before paying anything"
+]} />
+
+## The columns
+
+Layouts differ between insurers but the same quantities appear on nearly all of them.
+
+**Amount billed / charged.** What the provider asked for. This is a list price and is rarely what anyone pays.
+
+**Allowed amount / plan rate.** The maximum the plan recognises for that service. For an in-network provider this is a contracted rate agreed in advance.
+
+**Contractual adjustment / discount / not covered by plan.** The difference between billed and allowed. Where the provider is in network, this is written off under their contract with the insurer. **Nobody pays it** - not you, not the plan. This column is the source of most confusion.
+
+**Plan paid / insurance paid.** What the insurer actually sent the provider.
+
+**Deductible.** The portion applied against your annual deductible before the plan starts paying.
+
+**Copay / coinsurance.** Your fixed fee or your percentage share of the allowed amount.
+
+**Patient responsibility / you may owe.** The total the plan says falls to you. **This is the number that matters**, and the one to compare against what the provider bills.
+
+## A worked example
+
+| Column | Amount |
+| --- | --- |
+| Billed | 2,480.00 |
+| Allowed | 1,310.00 |
+| Contractual adjustment | 1,170.00 |
+| Plan paid | 1,048.00 |
+| Deductible applied | 0.00 |
+| Coinsurance | 262.00 |
+| **Patient responsibility** | **262.00** |
+
+The provider asked for $2,480. The contracted rate is $1,310. The $1,170 difference is written off. The plan paid 80 per cent of the allowed amount and $262 falls to you.
+
+If a bill then arrives for $2,480, or for $1,218, something is wrong and it is worth a phone call before a payment.
+
+<Callout type="warning" title="The out-of-network difference">
+Where a provider is out of network, there may be no contract and therefore no write-off. The difference between billed and allowed can be charged to you - sometimes called balance billing. Some services are protected from surprise balance billing by federal and state rules, and the protections depend on the setting and the state. If you are billed a large balance after out-of-network care, that is worth checking rather than paying.
+</Callout>
+
+## Remark codes
+
+Every reduced or denied line carries a short code explaining why. The key is usually printed on the reverse of the statement or available in the insurer's portal.
+
+Common categories:
+
+- **Applied to deductible** - covered, but you are paying because the deductible is not met.
+- **Not a covered benefit** - the plan excludes this service.
+- **Requires prior authorisation** - approval was needed and not obtained.
+- **Duplicate claim** - submitted twice.
+- **Additional information needed** - the insurer is waiting on the provider.
+- **Out of network** - processed at a lower level or not at all.
+
+The distinction that matters is **administrative versus coverage**. A missing prior authorisation or a duplicate submission is usually fixable by the provider resubmitting. A benefit exclusion is a coverage decision, and challenging it means the appeal process. The [claim denial guide](/insurance-claim-denied-appeal-checklist/) covers how to structure that, and the [appeal deadlines guide](/how-long-insurance-company-respond-appeal/) covers the timeframes involved.
+
+## Reconciling against the bill
+
+The EOB and the provider bill answer different questions and only make sense together.
+
+Request an **itemised bill** from each provider - not a statement showing a balance. An itemised bill lists each service with its code, date and individual charge, which is what lets you match lines to the EOB. The [itemised bill guide](/what-is-an-itemized-medical-bill/) covers how to request one and what the columns mean.
+
+Then build a table with one row per service date:
+
+| Date | Provider | Billed | Allowed | Plan paid | You paid | Outstanding |
+| --- | --- | --- | --- | --- | --- | --- |
+| 14 Mar | City ED | 2,480.00 | 1,310.00 | 1,048.00 | 262.00 | 0.00 |
+| 22 Mar | Imaging | 640.00 | 395.00 | 316.00 | 79.00 | 0.00 |
+
+An hour of this produces an accurate out-of-pocket figure. It also surfaces the discrepancies worth querying.
+
+<Checklist title="Working through an EOB" items={[
+  { item: "Confirm it says 'this is not a bill'", detail: "Almost all do, usually in small type." },
+  { item: "Check the patient name, date of service and provider", detail: "Claims are occasionally processed against the wrong patient." },
+  { item: "Note the claim number", detail: "Quote it in any query to the insurer or provider." },
+  { item: "Identify the patient responsibility figure", detail: "This is the number to compare against the provider bill." },
+  { item: "Ignore the contractual adjustment", detail: "In network, nobody pays it. It is a write-off." },
+  { item: "Look up the remark code on every reduced or denied line", detail: "Key is on the reverse or in the insurer portal." },
+  { item: "Separate administrative issues from coverage decisions", detail: "One is fixed by resubmission, the other needs an appeal." },
+  { item: "Request an itemised bill from the provider", detail: "Not a statement showing a balance." },
+  { item: "Build a reconciliation table, one row per service date", detail: "Billed, allowed, plan paid, you paid, outstanding." },
+  { item: "Query differences in writing before paying", detail: "Reference the claim number and date of service." },
+  { item: "Keep every EOB with the matching bill", detail: "Corrections and collection activity can surface late." }
+]} note="EOB layouts, terminology and remark code keys vary by insurer. Your own plan documents govern what is covered." />
+
+## Why keep them
+
+Beyond checking individual charges, EOBs are the only document showing what was actually paid rather than what was asked for. That matters in three situations.
+
+**Deductible tracking.** They are the running record of how much of your annual deductible has been met.
+
+**Injury claims.** Where treatment arises from an incident someone else may be responsible for, the accurate cost figure comes from the EOBs, not the billed amounts. The [medical records organisation guide](/organizing-medical-records-injury-claim/) covers building that file.
+
+**Health insurer liens.** Where a plan paid for treatment related to such an incident, it may assert a right to be repaid from any later recovery. The EOBs are what establish the amounts involved.
+
+<Callout type="tip">
+Download EOBs from the insurer portal rather than relying on post, and save them by date and provider. Portals commonly purge older statements after a period, and retrieving them afterwards is much harder than saving them as they arrive.
+</Callout>
+
+## When to escalate
+
+If a line is denied and the reason is a coverage decision you disagree with, that runs through the plan's appeal process rather than a phone call to billing. If a provider is pursuing a balance the EOB does not support, query it in writing and keep the correspondence.
+
+Speak to a licensed attorney in your state if a large balance follows out-of-network care and you believe billing protections should apply, if a health insurer asserts a lien against a settlement, if an account has gone to collections and you dispute it, or if the amounts are significant. Your state department of insurance also accepts consumer complaints about claims handling at no cost. Questions about whether treatment was appropriate belong with your clinicians, not with a billing department.
