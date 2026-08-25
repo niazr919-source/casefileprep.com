@@ -8,7 +8,7 @@ import DisclaimerBanner from '@/components/DisclaimerBanner';
 import CookieConsent from '@/components/CookieConsent';
 import JsonLd from '@/components/JsonLd';
 import { organizationSchema, websiteSchema } from '@/lib/schema';
-import { adsense, siteConfig } from '@/lib/site';
+import { adsense, analytics, siteConfig } from '@/lib/site';
 
 const sans = Inter({
   subsets: ['latin'],
@@ -100,6 +100,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="/feed.xml"
         />
 
+        {analytics.ga4Id ? (
+          <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
+        ) : null}
+
         {adsense.client ? (
           <>
             <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="" />
@@ -151,6 +155,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <JsonLd id="global" data={[organizationSchema(), websiteSchema()]} />
 
+        {/*
+          Google Analytics 4.
+
+          `afterInteractive` on purpose, and safe here in a way it was not for
+          the AdSense tag: analytics only has to run in real browsers, it does
+          not have to be visible to a verification crawler reading raw HTML.
+          It also guarantees ordering - the Consent Mode defaults above use
+          `beforeInteractive`, so `analytics_storage: denied` is always set
+          before the first GA4 command runs.
+
+          The tag therefore loads for everyone but stores nothing until the
+          reader accepts in the consent bar, at which point CookieConsent
+          fires gtag('consent','update') and measurement begins.
+        */}
+        {analytics.ga4Id ? (
+          <>
+            <Script
+              id="ga4-src"
+              async
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${analytics.ga4Id}`}
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`gtag('js', new Date());gtag('config', '${analytics.ga4Id}');`}
+            </Script>
+          </>
+        ) : null}
       </body>
     </html>
   );

@@ -48,6 +48,24 @@ export const siteConfig = {
  */
 const ADSENSE_PUBLISHER_ID = 'ca-pub-2716080376550479';
 
+/**
+ * Google Analytics 4 measurement ID.
+ *
+ * Hard-coded for the same reason as the publisher ID above: it is public by
+ * design, visible in the page source of every site that uses GA4, and
+ * NEXT_PUBLIC_* env vars are inlined at build time so a value set in a hosting
+ * panel afterwards silently does nothing.
+ *
+ * Loading is gated by Consent Mode v2 - see app/layout.tsx. The tag loads but
+ * `analytics_storage` starts denied, so nothing is stored until the reader
+ * accepts in the consent bar.
+ */
+const GA4_MEASUREMENT_ID = 'G-Z5H8NRSXSS';
+
+export const analytics = {
+  ga4Id: process.env.NEXT_PUBLIC_GA4_ID || GA4_MEASUREMENT_ID,
+};
+
 export const adsense = {
   client: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || ADSENSE_PUBLISHER_ID,
   slots: {
