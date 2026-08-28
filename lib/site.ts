@@ -10,10 +10,16 @@ export const siteConfig = {
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'editorial@casefileprep.com',
   founded: '2024',
   markets: ['United States', 'United Kingdom', 'Canada', 'Australia'],
-  social: {
-    x: 'https://x.com/casefileprep',
-    linkedin: 'https://www.linkedin.com/company/casefileprep',
-  },
+  /**
+    * Verified public profiles only.
+    *
+    * These were placeholder URLs for accounts that do not exist - x.com
+    * returned 404. Emitting them in Organization `sameAs` asserted an identity
+    * that could not be resolved, which is a negative signal for exactly the
+    * entity-resolution that search and AI answer engines run. Add entries back
+    * here only once the profile actually exists and is live.
+    */
+  social: [] as string[],
   disclaimer:
     'Disclaimer: The information provided on this website is for general educational and informational purposes only and does not constitute formal legal advice. No attorney-client relationship is formed.',
   nav: [

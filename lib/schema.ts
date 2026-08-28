@@ -19,7 +19,7 @@ export function organizationSchema(): Json {
     url: absoluteUrl(siteConfig.url, '/'),
     description: siteConfig.description,
     foundingDate: siteConfig.founded,
-    sameAs: [siteConfig.social.x, siteConfig.social.linkedin],
+    ...(siteConfig.social.length ? { sameAs: siteConfig.social } : {}),
     publishingPrinciples: absoluteUrl(siteConfig.url, '/editorial-policy'),
     contactPoint: [
       {

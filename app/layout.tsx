@@ -58,9 +58,9 @@ export const metadata: Metadata = {
     description: siteConfig.description,
   },
   twitter: {
+    // Card type only - no site/creator handle is claimed, because no such
+    // account exists. Add them back when a real profile is live.
     card: 'summary_large_image',
-    site: '@casefileprep',
-    creator: '@casefileprep',
   },
   robots: {
     index: true,

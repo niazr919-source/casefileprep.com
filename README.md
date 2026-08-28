@@ -199,6 +199,24 @@ sitemap and schema all derive from it.
 
 ---
 
+## Answer engines (AEO/GEO)
+
+- `/llms.txt` - short structured summary of the site for answer engines: who
+  publishes it, what it is *not*, and how to cite it accurately (include the
+  jurisdiction and the last-checked date, prefer the primary source). Generated
+  from the live content, so it never drifts.
+- `/llms-full.txt` - every guide as plain markdown in one file. The authoring
+  components are unwrapped rather than stripped, so checklists, key points and
+  callout warnings survive instead of being discarded with the JSX.
+- `robots.txt` explicitly allows the major AI crawlers - OpenAI, Anthropic,
+  Perplexity, Google-Extended, Applebot-Extended, CCBot and others. That is a
+  deliberate trade: allowing them means the content can be used for training as
+  well as for grounding cited answers. To reverse it, disallow the
+  training-oriented agents and keep the user-initiated and search ones.
+- No `sameAs` or Twitter handle is emitted unless a real profile exists.
+  Unresolvable identity claims are a negative signal for the entity resolution
+  that both search and answer engines run.
+
 ## Dependency security
 
 `npm audit` reports 3 high advisories that resolve only by moving to Next 16 (a
