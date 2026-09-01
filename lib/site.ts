@@ -82,4 +82,14 @@ export const adsense = {
   },
 };
 
+/**
+ * Revision date shown on, and reported for, the policy pages.
+ *
+ * Kept here so the sitemap and the pages themselves cannot drift apart. Update
+ * it when a policy page is substantively revised - not for typo fixes, because
+ * a refreshed date with no real change misleads readers and search engines
+ * alike, which is the same principle the guides follow.
+ */
+export const LEGAL_PAGES_UPDATED = '2026-08-01';
+
 export type SiteConfig = typeof siteConfig;
