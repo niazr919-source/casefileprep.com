@@ -23,10 +23,14 @@ const ROBOTS = `# ${siteConfig.name} - ${siteConfig.domain}
 # Machine-readable summary for answer engines: ${siteConfig.url}/llms.txt
 # Full guide text as markdown: ${siteConfig.url}/llms-full.txt
 
+# /search/ is deliberately NOT disallowed here. It carries a noindex tag, and
+# blocking the crawl would stop Google ever reading that tag - so the URL could
+# still be indexed from the header link that appears on every page, which is
+# the "Indexed, though blocked by robots.txt" warning. To keep a linked page
+# out of the index you must let it be crawled.
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /search/
 
 # --- Google ---------------------------------------------------------------
 User-agent: Googlebot
