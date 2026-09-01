@@ -8,6 +8,8 @@ import AdSlot from '@/components/AdSlot';
 import Callout from '@/components/mdx/Callout';
 import Checklist from '@/components/mdx/Checklist';
 import KeyTakeaways from '@/components/mdx/KeyTakeaways';
+import ProcessFlow from '@/components/mdx/ProcessFlow';
+import Comparison from '@/components/mdx/Comparison';
 
 function SmartLink({ href = '', ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   const external = /^https?:\/\//.test(href);
@@ -32,6 +34,8 @@ const components = {
   Callout,
   Checklist,
   KeyTakeaways,
+  ProcessFlow,
+  Comparison,
   table: (props: React.HTMLAttributes<HTMLTableElement>) => (
     <div className="not-prose my-7 overflow-x-auto rounded-lg border border-slate-200">
       <table className="w-full border-collapse text-left text-[15px]" {...props} />

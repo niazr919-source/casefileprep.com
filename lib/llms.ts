@@ -38,6 +38,55 @@ export function mdxToPlainMarkdown(body: string): string {
   );
 
   /**
+   * <ProcessFlow title="T" steps={[{label, detail, flag}]} note="N" />
+   * -> a numbered list.
+   *
+   * Added when the guides gained this component. A converter that only knows
+   * about the components that existed when it was written silently deletes
+   * every new one - the generic tag-strip below swallows the whole block.
+   * Anything added to MdxContent must be added here too.
+   */
+  out = out.replace(
+    /<ProcessFlow\s+title="([^"]*)"\s+steps=\{\[([\s\S]*?)\]\}(?:\s+note="([^"]*)")?\s*\/>/g,
+    (_m, title: string, inner: string, note?: string) => {
+      const steps = [
+        ...inner.matchAll(
+          /\{\s*label:\s*"([^"]*)"(?:\s*,\s*detail:\s*"([^"]*)")?(?:\s*,\s*flag:\s*"([^"]*)")?\s*\}/g,
+        ),
+      ];
+      const list = steps
+        .map(([, label, detail, flag], i) => {
+          const bits = [`${i + 1}. **${label}**`];
+          if (detail) bits.push(` - ${detail}`);
+          if (flag) bits.push(` (${flag})`);
+          return bits.join('');
+        })
+        .join('\n');
+      return `**${title}**\n\n${list}\n${note ? `\n_${note}_\n` : ''}`;
+    },
+  );
+
+  /**
+   * <Comparison a={{...}} b={{...}} verdict="..." /> -> two labelled lists.
+   */
+  out = out.replace(
+    /<Comparison\s+([\s\S]*?)\/>/g,
+    (_m, attrs: string) => {
+      const side = (key: 'a' | 'b') => {
+        const block = new RegExp(`${key}=\\{\\{([\\s\\S]*?)\\}\\}`).exec(attrs)?.[1];
+        if (!block) return '';
+        const title = /title:\s*"([^"]*)"/.exec(block)?.[1] ?? '';
+        const subtitle = /subtitle:\s*"([^"]*)"/.exec(block)?.[1];
+        const pointsBlock = /points:\s*\[([\s\S]*?)\]/.exec(block)?.[1] ?? '';
+        const points = [...pointsBlock.matchAll(/"([^"]*)"/g)].map((m) => `- ${m[1]}`);
+        return `**${title}**${subtitle ? ` - ${subtitle}` : ''}\n\n${points.join('\n')}\n`;
+      };
+      const verdict = /verdict="([^"]*)"/.exec(attrs)?.[1];
+      return `${side('a')}\n${side('b')}\n${verdict ? `**How to choose:** ${verdict}\n` : ''}`;
+    },
+  );
+
+  /**
    * <Callout type="x" title="T">body</Callout> -> a blockquote.
    *
    * The attributes are captured as one block and the title pulled out

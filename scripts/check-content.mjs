@@ -218,6 +218,27 @@ for (const file of files) {
   }
 }
 
+// --- Guard: every MDX component must have a plain-text converter -----------
+// lib/llms.ts unwraps authoring components into markdown for answer engines.
+// A component with no handler there is silently DELETED by the generic
+// tag-strip, so its content vanishes from /llms-full.txt without any error.
+// That has now happened twice. This fails the build instead.
+{
+  const llms = fs.readFileSync(path.join(process.cwd(), 'lib', 'llms.ts'), 'utf8');
+  const used = new Set();
+  for (const file of files) {
+    const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
+    for (const m of raw.matchAll(/<([A-Z][A-Za-z0-9]*)/g)) used.add(m[1]);
+  }
+  for (const component of [...used].sort()) {
+    if (!llms.includes(`<${component}`)) {
+      errors.push(
+        `lib/llms.ts has no converter for <${component}> - its content would be stripped from /llms-full.txt`,
+      );
+    }
+  }
+}
+
 if (files.length < MIN_POSTS) {
   errors.push(
     `Only ${files.length} guides published. Ad platforms treat thin sites as low-value content; aim for at least ${MIN_POSTS}.`,
