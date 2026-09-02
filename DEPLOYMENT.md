@@ -39,14 +39,6 @@ cd "C:\Users\zaman\Desktop\Law FIrm" && npm run check && git add . && git commit
 Hostinger rebuilds automatically. Run `npm run check` first — it enforces the
 frontmatter, word count, sourcing and review rules described in the README.
 
-## Node version
-
-Next 16 requires **Node.js 20.9 or newer** and the build fails outright on
-anything older, so `package.json` declares `engines.node: >=20.9.0`. If hPanel is
-pinned to Node 18 for this application, raise it before the next deploy — this
-is the one setting that will fail on Hostinger while CI stays green, because CI
-pins its own Node.
-
 ## Environment variables
 
 Set these in hPanel under the application's environment settings, not in the repo.
@@ -99,9 +91,8 @@ npm run build && npm run start
 ```
 
 Production build served locally on the same port — the closest match to what
-Hostinger runs. Under Next 16 `next dev` writes to `.next/dev` and `next build`
-to `.next`, so a dev session no longer clobbers the build the way it used to.
-A lockfile stops a `dev` and a `build` running against the project at once.
+Hostinger runs. Note that `npm run dev` overwrites `.next`, so rebuild before
+`npm run start`.
 
 ```bash
 npm run check
