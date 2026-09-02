@@ -12,7 +12,7 @@ means it never gets written.
 
 ---
 
-- [ ] How to appeal a small claims judgment | Small Claims & Civil Disputes | how-to-appeal-small-claims-judgment
+- [x] How to appeal a small claims judgment | Small Claims & Civil Disputes | how-to-appeal-small-claims-judgment
 - [ ] Independent contractor or employee: why the classification matters | Small Business Legal Prep | independent-contractor-vs-employee-classification
 - [ ] Documenting a hail or storm damage claim | Claims & Incident Documentation | hail-storm-damage-claim-documentation
 - [ ] Court fee waivers: filing when you cannot afford the fee | Small Claims & Civil Disputes | small-claims-court-fee-waiver
