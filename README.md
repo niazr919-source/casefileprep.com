@@ -5,7 +5,7 @@ Domain selected for launch: **casefileprep.com** (`.com`, `.net` and `.org` show
 nameserver records at the time of scaffolding — confirm registrability at a registrar
 before you buy).
 
-- **Framework:** Next.js 15 (App Router), React 19, TypeScript
+- **Framework:** Next.js 16 (App Router, Turbopack), React 19, TypeScript
 - **Deployment:** Hostinger builds and runs the Next.js app from GitHub (see [DEPLOYMENT.md](DEPLOYMENT.md))
 - **Styling:** Tailwind CSS 3.4 + `@tailwindcss/typography`, slate/navy corporate palette
 - **Content:** local MDX in `content/posts/` with a typed frontmatter schema
@@ -219,21 +219,26 @@ sitemap and schema all derive from it.
 
 ## Dependency security
 
-`npm audit` reports 3 high advisories that resolve only by moving to Next 16 (a
-major upgrade). They are **not reachable in this deployment**:
+`npm audit --omit=dev` reports **0 vulnerabilities**. Keep it that way: it is the
+one check here that a reader of the site cannot do for us.
 
-| Package | Where it lives | Why it does not apply |
-| --- | --- | --- |
-| `sharp` | `next`'s optional image dependency | Only reachable through the Image Optimization API. The site uses no `next/image` components and sets `images.unoptimized: true`, which keeps that endpoint out of play. Revisit before introducing real images. |
-| `postcss` (nested in `next`) | Next's internal CSS pipeline | Build-time only, processing our own first-party CSS on CI. The advisories require attacker-controlled CSS or `sourceMappingURL`. Nothing reaches the browser or Hostinger. |
+**Fixed already:**
 
-Hostinger runs the app on Node, so these packages are present in production;
-the mitigation is that neither has a reachable code path in this site as built.
-Upgrading to Next 16 would clear both properly and is worth scheduling.
+| Change | Cleared |
+| --- | --- |
+| `next` 15.5.4 → 15.5.23 | a critical RCE advisory |
+| `next-mdx-remote` 5 → 6 | GHSA-g4xw-jxrg-5f6m |
+| `next` 15.5.23 → 16.3.4 | the nested `postcss` advisories (GHSA-6g55-p6wh-862q, GHSA-fxqj-rqcc-2cmp, GHSA-r28c-9q8g-f849, GHSA-qx2v-qp2m-jg93) via postcss 8.5.23, and the inherited libvips CVEs (GHSA-f88m-g3jw-g9cj) via sharp 0.35.4 |
 
-**Fixed already:** `next` 15.5.4 → 15.5.23 (cleared a critical RCE advisory) and
-`next-mdx-remote` 5 → 6 (cleared GHSA-g4xw-jxrg-5f6m). See the note in
-`components/MdxContent.tsx` about `blockJS` and why it is off for first-party MDX.
+The Next 16 bump was hygiene rather than an open hole - neither advisory had a
+reachable code path here. `postcss` only ever processed our own first-party CSS
+at build time, and `sharp` is only reachable through the Image Optimization API,
+which `images.unoptimized: true` keeps out of play. That reasoning is why the
+upgrade could be scheduled rather than rushed; it is not a reason to leave the
+next one sitting.
+
+See the note in `components/MdxContent.tsx` about `blockJS` and why it is off for
+first-party MDX.
 
 ---
 

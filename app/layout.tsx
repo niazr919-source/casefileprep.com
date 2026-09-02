@@ -84,9 +84,22 @@ export const viewport: Viewport = {
   colorScheme: 'light',
 };
 
+/**
+ * `data-scroll-behavior` restores the pre-Next-16 navigation behaviour.
+ *
+ * globals.css sets `scroll-behavior: smooth` on <html> so table-of-contents
+ * anchors glide. Next 15 silently forced that to `auto` for the duration of a
+ * route change; Next 16 no longer does, which would make every page-to-page
+ * navigation smooth-scroll to the top instead of landing there instantly. The
+ * attribute opts that override back in.
+ */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+    <html
+      lang="en"
+      className={`${sans.variable} ${serif.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <head>
         {/*
           Declared here rather than via metadata.alternates.types because Next
