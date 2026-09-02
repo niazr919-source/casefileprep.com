@@ -32,9 +32,19 @@ const TRUST_POINTS = [
   },
 ];
 
+/**
+ * Guides shown on the homepage beside the featured one.
+ *
+ * Ten keeps the grid filling complete rows next to the two-column lead card,
+ * and keeps the page a reasonable length. Everything else lives on /guides.
+ */
+const HOMEPAGE_GUIDE_COUNT = 10;
+
 export default function HomePage() {
   const posts = getAllPosts();
   const [lead, ...rest] = posts;
+  const homepagePosts = rest.slice(0, HOMEPAGE_GUIDE_COUNT);
+  const remaining = rest.length - homepagePosts.length;
 
   return (
     <>
@@ -93,20 +103,39 @@ export default function HomePage() {
             </Link>
           </div>
 
+          {/*
+            One grid, with the lead card spanning two columns.
+
+            This was previously a 7/5 split: the featured guide alone on the
+            left and every remaining guide stacked in the right column. That
+            read fine at three guides and broke badly at thirty-nine - one card
+            beside a column thirty-eight cards tall, leaving most of the page
+            empty. A single flowing grid fills the row at every breakpoint
+            regardless of how many guides exist.
+          */}
           {lead ? (
-            <div className="mt-6 grid gap-6 lg:grid-cols-12">
-              <div className="lg:col-span-7">
+            <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <div className="md:col-span-2">
                 <ArticleCard post={lead} variant="featured" />
               </div>
-              <div className="grid gap-5 lg:col-span-5">
-                {rest.map((post) => (
-                  <ArticleCard key={post.slug} post={post} />
-                ))}
-              </div>
+              {homepagePosts.map((post) => (
+                <ArticleCard key={post.slug} post={post} />
+              ))}
             </div>
           ) : (
             <p className="mt-6 text-slate-600">No guides published yet.</p>
           )}
+
+          {remaining > 0 ? (
+            <p className="mt-8 text-center">
+              <Link
+                href="/guides"
+                className="inline-block rounded-md border border-navy-200 bg-white px-5 py-3 text-sm font-semibold text-navy-800 transition-colors hover:bg-navy-50"
+              >
+                Browse all {posts.length} guides
+              </Link>
+            </p>
+          ) : null}
         </section>
 
         <AdSlot variant="in-feed" className="mt-10" />
@@ -170,6 +199,14 @@ export default function HomePage() {
             .
           </p>
         </section>
+
+        {/*
+          Bottom-of-page slot. Kept below the editorial content rather than
+          between the guide grid and the topic cards, so it never sits between
+          two things a reader is comparing - which is where accidental clicks
+          come from.
+        */}
+        <AdSlot variant="in-feed" className="mt-14" />
       </div>
     </>
   );
