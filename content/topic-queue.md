@@ -13,9 +13,9 @@ means it never gets written.
 ---
 
 - [x] How to appeal a small claims judgment | Small Claims & Civil Disputes | how-to-appeal-small-claims-judgment
-- [ ] Independent contractor or employee: why the classification matters | Small Business Legal Prep | independent-contractor-vs-employee-classification
-- [ ] Documenting a hail or storm damage claim | Claims & Incident Documentation | hail-storm-damage-claim-documentation
-- [ ] Court fee waivers: filing when you cannot afford the fee | Small Claims & Civil Disputes | small-claims-court-fee-waiver
+- [x] Independent contractor or employee: why the classification matters | Small Business Legal Prep | independent-contractor-vs-employee-classification
+- [x] Documenting a hail or storm damage claim | Claims & Incident Documentation | hail-storm-damage-claim-documentation
+- [x] Court fee waivers: filing when you cannot afford the fee | Small Claims & Civil Disputes | small-claims-court-fee-waiver
 - [ ] What belongs in a client service agreement | Small Business Legal Prep | client-service-agreement-essentials
 - [ ] Uninsured and underinsured motorist claims | Claims & Incident Documentation | uninsured-underinsured-motorist-claim
 - [ ] Suing a business rather than a person: getting the defendant right | Small Claims & Civil Disputes | suing-a-business-vs-individual
