@@ -16,9 +16,9 @@ means it never gets written.
 - [x] Independent contractor or employee: why the classification matters | Small Business Legal Prep | independent-contractor-vs-employee-classification
 - [x] Documenting a hail or storm damage claim | Claims & Incident Documentation | hail-storm-damage-claim-documentation
 - [x] Court fee waivers: filing when you cannot afford the fee | Small Claims & Civil Disputes | small-claims-court-fee-waiver
-- [ ] What belongs in a client service agreement | Small Business Legal Prep | client-service-agreement-essentials
-- [ ] Uninsured and underinsured motorist claims | Claims & Incident Documentation | uninsured-underinsured-motorist-claim
-- [ ] Suing a business rather than a person: getting the defendant right | Small Claims & Civil Disputes | suing-a-business-vs-individual
+- [x] What belongs in a client service agreement | Small Business Legal Prep | client-service-agreement-essentials
+- [x] Uninsured and underinsured motorist claims | Claims & Incident Documentation | uninsured-underinsured-motorist-claim
+- [x] Suing a business rather than a person: getting the defendant right | Small Claims & Civil Disputes | suing-a-business-vs-individual
 - [ ] Business licences and permits: working out what you need | Small Business Legal Prep | business-licences-and-permits-checklist
 - [ ] Documenting a theft or burglary insurance claim | Claims & Incident Documentation | theft-burglary-insurance-claim-documentation
 - [ ] What actually happens at a small claims hearing | Small Claims & Civil Disputes | what-happens-at-small-claims-hearing
